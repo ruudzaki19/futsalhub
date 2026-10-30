@@ -4,43 +4,34 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import FutsalEmblem from '../components/FutsalEmblem';
 
 export default function TentangPage() {
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-stone-800 font-sans">
+    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#121417] text-stone-900 dark:text-[#F3F4F6] font-sans selection:bg-emerald-200 dark:selection:bg-emerald-900 flex flex-col justify-between transition-colors">
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-6 py-16 space-y-12">
-        <div className="text-center space-y-3">
-          <span className="text-xs font-bold tracking-widest text-emerald-800 uppercase">
-            Latar Belakang Proyek
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0F291E] tracking-tight">
+      <main className="max-w-4xl mx-auto px-6 py-14 flex-1 space-y-10 w-full">
+        <div className="text-center space-y-4">
+          <div className="inline-flex p-3 rounded-2xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
+            <FutsalEmblem className="w-10 h-10 text-stone-800 dark:text-emerald-400" />
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white">
             Tentang Sistem FUTSALHUB
           </h1>
-          <p className="text-stone-600 text-sm max-w-xl mx-auto">
-            Sistem Informasi Operasional & Reservasi Lapangan Futsal Berbasis Web Terintegrasi.
+          <p className="text-sm text-stone-600 dark:text-stone-400 max-w-xl mx-auto leading-relaxed">
+            Platform operasional digital penyewaan 3 lapangan futsal terintegrasi untuk mengeliminasi konflik jadwal ganda dan manualisasi pembukuan kasir.
           </p>
         </div>
 
-        <div className="bg-white border border-stone-200 rounded-2xl p-8 shadow-sm space-y-6">
-          <h2 className="text-xl font-bold text-stone-900 border-b border-stone-100 pb-3">
-            Tujuan Pengembangan Sistem
-          </h2>
-          <p className="text-sm text-stone-600 leading-relaxed">
-            FUTSALHUB dirancang untuk mengatasi inefisiensi pencatatan manual dan pemesanan via obrolan instan. Melalui penerapan basis data terpusat, sistem ini mengeliminasi masalah *race condition* atau bentrok jadwal sewa (double booking), memvalidasi pembayaran melalui *audit trail*, dan memberikan transparansi pendapatan harian bagi pengelola.
+        <div className="bg-white dark:bg-[#1A1D23] border border-stone-200 dark:border-stone-700/80 rounded-3xl p-8 space-y-6 shadow-sm text-stone-700 dark:text-stone-300 text-sm leading-relaxed">
+          <h2 className="text-lg font-bold text-stone-900 dark:text-white">Transparansi & Digitalisasi</h2>
+          <p>
+            Sistem Informasi Penyewaan Lapangan Futsal dirancang untuk mengatasi kelemahan operasional manual di mana catatan kertas dan verifikasi chat WhatsApp kerap menimbulkan tumpang tindih slot dan keterlambatan laporan.
           </p>
-
-          <div className="grid sm:grid-cols-2 gap-4 pt-4">
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-              <span className="block text-xs font-bold text-emerald-900 uppercase">Mata Kuliah</span>
-              <span className="text-sm font-semibold text-stone-800">Analisis & Perancangan Sistem Informasi</span>
-            </div>
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-              <span className="block text-xs font-bold text-emerald-900 uppercase">Institusi</span>
-              <span className="text-sm font-semibold text-stone-800">Program Studi Sistem Informasi - FTD</span>
-            </div>
-          </div>
+          <p>
+            Melalui fitur penguncian otomatis 15 menit (Auto-Lock) dan antrean verifikasi kasir terpusat, pelanggan mendapatkan kepastian jam sewa secara real-time dan pemilik dapat memantau pendapatan harian tanpa distorsi data.
+          </p>
         </div>
       </main>
 

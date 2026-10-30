@@ -1,4 +1,4 @@
-// src/components/Footer.tsx
+// src/app/components/Footer.tsx
 import React from 'react';
 import Link from 'next/link';
 import FutsalEmblem from './FutsalEmblem';
@@ -14,7 +14,7 @@ export default function Footer() {
             <span className="font-black text-xl tracking-tight text-white">FUTSALHUB</span>
           </div>
           <p className="text-sm text-stone-400 max-w-sm leading-relaxed">
-            Platform sistem informasi operasional arena futsal terintegrasi. Memastikan penjadwalan mandiri akurat tanpa double-booking serta pencatatan transaksi transparan.
+            Platform sistem informasi operasional arena 3 lapangan futsal terintegrasi. Memastikan penjadwalan mandiri akurat tanpa double-booking serta pencatatan transaksi transparan.
           </p>
         </div>
 
@@ -22,15 +22,16 @@ export default function Footer() {
           <h4 className="text-xs font-bold tracking-widest text-white uppercase mb-4">Navigasi Halaman</h4>
           <ul className="space-y-2 text-sm text-stone-400">
             <li><Link href="/" className="hover:text-emerald-300 transition-colors">Beranda</Link></li>
-            <li><Link href="#jadwal" className="hover:text-emerald-300 transition-colors">Kalender Slot</Link></li>
+            <li><Link href="/jadwal" className="hover:text-emerald-300 transition-colors">Kalender Slot</Link></li>
+            <li><Link href="/fasilitas" className="hover:text-emerald-300 transition-colors">Fasilitas & Tarif</Link></li>
             <li><Link href="/login" className="hover:text-emerald-300 transition-colors">Login Admin / Owner</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="text-xs font-bold tracking-widest text-white uppercase mb-4">Proyek Akademis APSI</h4>
+          <h4 className="text-xs font-bold tracking-widest text-white uppercase mb-4">Informasi Arena</h4>
           <p className="text-xs text-stone-400 leading-relaxed">
-            Dirancang dan dibangun menggunakan metodologi perancangan terstruktur & OOAD untuk memenuhi standar sistem informasi yang teruji.
+            Menyediakan 3 lapangan futsal standar turnamen interlock resmi. Buka setiap hari jam 08:00 - 23:00 WIB.
           </p>
         </div>
 

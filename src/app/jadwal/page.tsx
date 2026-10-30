@@ -3,167 +3,197 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { Calendar as CalendarIcon, Clock, ChevronRight, CheckCircle2, Lock } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { dummyLapangan, dummySlots, SlotWaktu } from '../../data/mockData';
+
+interface SlotDetail {
+  id: string;
+  jam: string;
+  lapanganId: number;
+  lapangan: string;
+  tarif: number;
+  status: 'kosong' | 'terkunci' | 'terisi';
+}
 
 export default function JadwalPage() {
-  // State filter tanggal (default: hari ini)
-  const [selectedDate, setSelectedDate] = useState('2026-09-19');
-  // State filter lapangan (default: Lapangan 1)
-  const [selectedLapanganId, setSelectedLapanganId] = useState<number>(1);
+  const [selectedDate, setSelectedDate] = useState('2026-09-28');
+  const [selectedLap, setSelectedLap] = useState<'semua' | 1 | 2 | 3>('semua');
 
-  // Filter slot berdasarkan lapangan yang dipilih
-  const filteredSlots = dummySlots.filter(
-    (slot) => slot.lapanganId === selectedLapanganId
-  );
+  // Slot 3 Lapangan (Semua jenis sama: Standar Vinyl Interlock Resmi)
+  const slots: SlotDetail[] = [
+    // Lapangan 1
+    { id: 'L1-S1', jam: '15:00 - 16:00', lapanganId: 1, lapangan: 'Lapangan 1', tarif: 150000, status: 'kosong' },
+    { id: 'L1-S2', jam: '16:00 - 17:00', lapanganId: 1, lapangan: 'Lapangan 1', tarif: 150000, status: 'kosong' },
+    { id: 'L1-S3', jam: '17:00 - 18:00', lapanganId: 1, lapangan: 'Lapangan 1', tarif: 170000, status: 'kosong' },
+    { id: 'L1-S4', jam: '18:00 - 19:00', lapanganId: 1, lapangan: 'Lapangan 1', tarif: 170000, status: 'terkunci' },
+    { id: 'L1-S5', jam: '19:00 - 20:00', lapanganId: 1, lapangan: 'Lapangan 1', tarif: 170000, status: 'terisi' },
+    { id: 'L1-S6', jam: '20:00 - 21:00', lapanganId: 1, lapangan: 'Lapangan 1', tarif: 170000, status: 'terisi' },
+    { id: 'L1-S7', jam: '21:00 - 22:00', lapanganId: 1, lapangan: 'Lapangan 1', tarif: 170000, status: 'kosong' },
 
-  const activeLapangan = dummyLapangan.find((l) => l.id === selectedLapanganId);
+    // Lapangan 2
+    { id: 'L2-S1', jam: '15:00 - 16:00', lapanganId: 2, lapangan: 'Lapangan 2', tarif: 150000, status: 'kosong' },
+    { id: 'L2-S2', jam: '16:00 - 17:00', lapanganId: 2, lapangan: 'Lapangan 2', tarif: 150000, status: 'kosong' },
+    { id: 'L2-S3', jam: '17:00 - 18:00', lapanganId: 2, lapangan: 'Lapangan 2', tarif: 170000, status: 'terisi' },
+    { id: 'L2-S4', jam: '18:00 - 19:00', lapanganId: 2, lapangan: 'Lapangan 2', tarif: 170000, status: 'kosong' },
+    { id: 'L2-S5', jam: '19:00 - 20:00', lapanganId: 2, lapangan: 'Lapangan 2', tarif: 170000, status: 'terkunci' },
+    { id: 'L2-S6', jam: '20:00 - 21:00', lapanganId: 2, lapangan: 'Lapangan 2', tarif: 170000, status: 'kosong' },
+    { id: 'L2-S7', jam: '21:00 - 22:00', lapanganId: 2, lapangan: 'Lapangan 2', tarif: 170000, status: 'terisi' },
+
+    // Lapangan 3
+    { id: 'L3-S1', jam: '15:00 - 16:00', lapanganId: 3, lapangan: 'Lapangan 3', tarif: 150000, status: 'kosong' },
+    { id: 'L3-S2', jam: '16:00 - 17:00', lapanganId: 3, lapangan: 'Lapangan 3', tarif: 150000, status: 'kosong' },
+    { id: 'L3-S3', jam: '17:00 - 18:00', lapanganId: 3, lapangan: 'Lapangan 3', tarif: 170000, status: 'kosong' },
+    { id: 'L3-S4', jam: '18:00 - 19:00', lapanganId: 3, lapangan: 'Lapangan 3', tarif: 170000, status: 'terisi' },
+    { id: 'L3-S5', jam: '19:00 - 20:00', lapanganId: 3, lapangan: 'Lapangan 3', tarif: 170000, status: 'kosong' },
+    { id: 'L3-S6', jam: '20:00 - 21:00', lapanganId: 3, lapangan: 'Lapangan 3', tarif: 170000, status: 'terkunci' },
+    { id: 'L3-S7', jam: '21:00 - 22:00', lapanganId: 3, lapangan: 'Lapangan 3', tarif: 170000, status: 'kosong' },
+  ];
+
+  const filteredSlots = slots.filter((s) => {
+    if (selectedLap === 'semua') return true;
+    return s.lapanganId === selectedLap;
+  });
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-stone-800 font-sans">
+    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#121417] text-stone-900 dark:text-[#F3F4F6] font-sans selection:bg-emerald-200 dark:selection:bg-emerald-900 flex flex-col justify-between transition-colors">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        {/* Header Sesi Jadwal (Sesuai UC-02) */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-stone-200">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-900 uppercase tracking-wider mb-3">
-              <span className="w-2 h-2 rounded-full bg-emerald-600" />
-              Sistem Ketersediaan Real-Time (UC-02)
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-[#0F291E] tracking-tight">
-              Kalender Jadwal Lapangan
-            </h1>
-            <p className="text-stone-600 text-sm mt-1">
-              Pilih arena, tentukan tanggal bermain, dan booking slot yang tersedia langsung tanpa antre.
-            </p>
-          </div>
+      <main className="max-w-7xl mx-auto px-6 py-10 flex-1 space-y-8 w-full">
+        {/* Header */}
+        <div className="border-b border-stone-200 dark:border-white/10 pb-6 space-y-2">
+          <span className="text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+            Kalender Pemesanan Real-Time
+          </span>
+          <h1 className="text-3xl font-black text-stone-900 dark:text-white">
+            Jadwal Ketersediaan 3 Lapangan Futsal
+          </h1>
+          <p className="text-sm text-stone-600 dark:text-stone-400">
+            Pilih tanggal dan slot jam bermain di Lapangan 1, 2, atau 3 yang masih kosong untuk reservasi instan.
+          </p>
+        </div>
 
-          {/* Filter Tanggal */}
-          <div className="bg-white p-3.5 rounded-2xl border border-stone-200 shadow-sm flex items-center gap-3">
-            <label htmlFor="tanggal" className="text-xs font-bold text-stone-600 uppercase tracking-wider">
-              Pilih Tanggal:
-            </label>
+        {/* Filter Bar */}
+        <div className="bg-white dark:bg-[#1A1D23] border border-stone-200 dark:border-stone-700/80 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <CalendarIcon className="w-5 h-5 text-stone-500" />
             <input
               type="date"
-              id="tanggal"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-sm font-semibold text-stone-800 focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
+              className="bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-sm text-stone-800 dark:text-stone-200 focus:outline-none"
             />
           </div>
-        </div>
 
-        {/* Tab Pemilihan Lapangan */}
-        <div className="flex items-center gap-3 my-8 overflow-x-auto pb-2">
-          {dummyLapangan.map((lap) => (
+          {/* Filter 3 Lapangan */}
+          <div className="flex bg-stone-100 dark:bg-stone-800 p-1 rounded-xl text-xs font-semibold text-stone-600 dark:text-stone-300 w-full sm:w-auto justify-center">
             <button
-              key={lap.id}
-              onClick={() => setSelectedLapanganId(lap.id)}
-              className={`px-6 py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all border ${
-                selectedLapanganId === lap.id
-                  ? 'bg-[#144734] text-[#FDFBF7] border-[#0E3526] shadow-md'
-                  : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-50'
+              onClick={() => setSelectedLap('semua')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                selectedLap === 'semua'
+                  ? 'bg-white dark:bg-[#121417] text-stone-900 dark:text-white shadow-sm font-bold'
+                  : 'hover:text-stone-900 dark:hover:text-white'
               }`}
             >
-              {lap.nama} • <span className="font-normal opacity-80">{lap.tipe}</span>
+              Semua Lapangan
             </button>
-          ))}
-        </div>
-
-        {/* Legenda Status Warna (Sesuai Rancangan UI Dokumen UAS) */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm mb-10 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
-            Indikator Status Slot:
-          </span>
-          <div className="flex flex-wrap items-center gap-6 text-xs font-semibold text-stone-700">
-            <div className="flex items-center gap-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-emerald-600 border border-emerald-700" />
-              <span>Kosong (Dapat Dipesan)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-amber-500" />
-              <span>Terkunci (Hold 15 Mnt)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-red-500 border border-red-600" />
-              <span>Terisi (Confirmed)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-stone-300 border border-stone-400" />
-              <span>Selesai / Lewat</span>
-            </div>
+            <button
+              onClick={() => setSelectedLap(1)}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                selectedLap === 1
+                  ? 'bg-white dark:bg-[#121417] text-stone-900 dark:text-white shadow-sm font-bold'
+                  : 'hover:text-stone-900 dark:hover:text-white'
+              }`}
+            >
+              Lapangan 1
+            </button>
+            <button
+              onClick={() => setSelectedLap(2)}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                selectedLap === 2
+                  ? 'bg-white dark:bg-[#121417] text-stone-900 dark:text-white shadow-sm font-bold'
+                  : 'hover:text-stone-900 dark:hover:text-white'
+              }`}
+            >
+              Lapangan 2
+            </button>
+            <button
+              onClick={() => setSelectedLap(3)}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                selectedLap === 3
+                  ? 'bg-white dark:bg-[#121417] text-stone-900 dark:text-white shadow-sm font-bold'
+                  : 'hover:text-stone-900 dark:hover:text-white'
+              }`}
+            >
+              Lapangan 3
+            </button>
           </div>
         </div>
 
-        {/* Grid Kartu Slot Waktu (UC-02 -> UC-03) */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredSlots.map((slot: SlotWaktu) => {
+        {/* Grid Slot Jam */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredSlots.map((slot) => {
             const isKosong = slot.status === 'kosong';
             const isTerkunci = slot.status === 'terkunci';
-            const isTerisi = slot.status === 'terisi';
 
             return (
               <div
                 key={slot.id}
-                className={`p-6 rounded-2xl border transition-all relative flex flex-col justify-between ${
+                className={`p-5 rounded-2xl border transition-all ${
                   isKosong
-                    ? 'bg-white border-emerald-200 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-emerald-500'
+                    ? 'bg-white dark:bg-[#1A1D23] border-stone-200 dark:border-stone-700/80 hover:border-stone-400 dark:hover:border-stone-500 shadow-sm'
                     : isTerkunci
-                    ? 'bg-amber-50/50 border-amber-200 shadow-none'
-                    : 'bg-stone-100/70 border-stone-200 shadow-none opacity-70'
+                    ? 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/40'
+                    : 'bg-stone-50 dark:bg-stone-900/40 border-stone-200 dark:border-stone-800 opacity-60'
                 }`}
               >
-                <div>
-                  {/* Waktu Jam & Badge Status */}
-                  <div className="flex items-start justify-between mb-4">
-                    <span className="text-xl font-black text-[#0F291E] tracking-tight">
-                      {slot.jamMulai} - {slot.jamSelesai}
-                    </span>
-                    <span
-                      className={`px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider rounded-md border ${
-                        isKosong
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                          : isTerkunci
-                          ? 'bg-amber-100 text-amber-800 border-amber-300'
-                          : 'bg-stone-200 text-stone-600 border-stone-300'
-                      }`}
-                    >
-                      {slot.status}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-stone-500 mb-6">
-                    {activeLapangan?.nama} ({activeLapangan?.tipe})
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
+                <div className="flex justify-between items-start mb-3">
                   <div>
-                    <span className="text-[10px] text-stone-400 block font-medium">Tarif Sewa</span>
-                    <span className="text-sm font-bold text-stone-800">
-                      Rp {slot.tarif.toLocaleString('id-ID')}
-                    </span>
+                    <span className="text-xs font-bold text-stone-700 dark:text-stone-300 block">{slot.lapangan}</span>
+                    <span className="text-[11px] text-stone-400 dark:text-stone-500">Arena Standar Turnamen</span>
                   </div>
-
-                  {isKosong ? (
-                    <Link
-                      href={`/booking/${slot.id}`}
-                      className="px-4 py-2 text-xs font-bold text-[#FDFBF7] bg-[#144734] hover:bg-[#0E3526] rounded-lg transition-all shadow-sm"
-                    >
-                      Pesan Slot
-                    </Link>
-                  ) : isTerkunci ? (
-                    <span className="text-[11px] font-semibold text-amber-700 italic">
-                      Hold 15 Mnt
-                    </span>
-                  ) : (
-                    <span className="text-[11px] font-semibold text-stone-400">
-                      Tidak Tersedia
-                    </span>
-                  )}
+                  <div>
+                    {isKosong ? (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40">
+                        KOSONG
+                      </span>
+                    ) : isTerkunci ? (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40">
+                        HOLD (15 MNT)
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-100 dark:bg-stone-800 text-stone-500">
+                        TERISI
+                      </span>
+                    )}
+                  </div>
                 </div>
+
+                <div className="my-4">
+                  <span className="text-xl font-black text-stone-900 dark:text-white block font-mono">
+                    {slot.jam}
+                  </span>
+                  <span className="text-sm font-semibold text-stone-600 dark:text-stone-300">
+                    Rp {slot.tarif.toLocaleString('id-ID')} / jam
+                  </span>
+                </div>
+
+                {isKosong ? (
+                  <Link
+                    href={`/booking?slot=${slot.id}&lapangan=${slot.lapanganId}`}
+                    className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-200 text-white dark:text-stone-900 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                  >
+                    <span>Pesan Slot Ini</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                ) : (
+                  <button
+                    disabled
+                    className="w-full py-2.5 px-4 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-400 dark:text-stone-500 text-xs font-semibold cursor-not-allowed"
+                  >
+                    Tidak Tersedia
+                  </button>
+                )}
               </div>
             );
           })}
