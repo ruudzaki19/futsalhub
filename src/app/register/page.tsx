@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, Phone, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Phone, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -22,6 +22,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<{ title: string; desc: string; alreadyRegistered?: boolean } | null>(null);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,13 +30,21 @@ export default function RegisterPage() {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPass = password.trim();
 
+    setErrorMsg(null);
+
     if (cleanPass.length < 6) {
-      toast.error('Kata sandi harus minimal 6 karakter!');
+      setErrorMsg({
+        title: 'Kata Sandi Terlalu Pendek',
+        desc: 'Kata sandi akun minimal harus 6 karakter untuk keamanan Anda.',
+      });
       return;
     }
 
     if (cleanPass !== confirmPassword.trim()) {
-      toast.error('Konfirmasi kata sandi tidak cocok!');
+      setErrorMsg({
+        title: 'Konfirmasi Sandi Tidak Cocok',
+        desc: 'Konfirmasi kata sandi tidak sama dengan kata sandi yang Anda masukkan.',
+      });
       return;
     }
 
@@ -54,7 +63,11 @@ export default function RegisterPage() {
       });
 
       if (!success) {
-        toast.error('Email ini sudah terdaftar! Silakan langsung login.');
+        setErrorMsg({
+          title: 'Email Sudah Terdaftar!',
+          desc: `Email "${cleanEmail}" sudah digunakan oleh akun lain. Silakan langsung masuk ke akun Anda.`,
+          alreadyRegistered: true,
+        });
         return;
       }
 
@@ -96,6 +109,41 @@ export default function RegisterPage() {
               </p>
             </div>
 
+            {/* Pemberitahuan Error / Validasi */}
+            {errorMsg && (
+              <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-start gap-3 shadow-xs animate-in fade-in slide-in-from-top-2 duration-200">
+                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                <div className="space-y-1.5 flex-1 text-left">
+                  <div className="flex items-center justify-between">
+                    <strong className="block font-black text-rose-900 text-sm">
+                      {errorMsg.title}
+                    </strong>
+                    <button
+                      type="button"
+                      onClick={() => setErrorMsg(null)}
+                      className="text-rose-400 hover:text-rose-700 transition-colors cursor-pointer p-0.5"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <p className="text-stone-700 leading-relaxed text-xs">
+                    {errorMsg.desc}
+                  </p>
+                  {errorMsg.alreadyRegistered && (
+                    <div className="pt-2">
+                      <Link
+                        href="/login"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
+                      >
+                        <span>Langsung Masuk ke Akun Anda</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleRegister} className="space-y-4">
               
               <div className="space-y-1.5 text-left">
@@ -125,7 +173,7 @@ export default function RegisterPage() {
                     <input
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => { setEmail(e.target.value); if (errorMsg) setErrorMsg(null); }}
                       placeholder="nama@email.com"
                       required
                       className="w-full pl-10 pr-4 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
@@ -161,7 +209,7 @@ export default function RegisterPage() {
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => { setPassword(e.target.value); if (errorMsg) setErrorMsg(null); }}
                       placeholder="Min. 6 karakter"
                       required
                       className="w-full pl-10 pr-10 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"

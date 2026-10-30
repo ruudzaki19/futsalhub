@@ -10,11 +10,14 @@ import {
   ShieldCheck, 
   ChevronDown, 
   Sun, 
-  Moon 
+  Moon,
+  ShoppingBag,
+  Calendar
 } from 'lucide-react';
-import { toast } from 'sonner';
 import FutsalEmblem from './FutsalEmblem';
+import CartDrawer from './CartDrawer';
 import { getStoredUser, clearStoredUser, UserSession } from '../../data/authStore';
+import { getCartItems } from '../../data/bookingStore';
 
 interface NavbarProps {
   onLogoClick?: () => void;
@@ -27,10 +30,20 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
   const [currentUser, setCurrentUser] = useState<UserSession | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setCurrentUser(getStoredUser());
+
+    const updateCart = () => {
+      const items = getCartItems();
+      setCartCount(items.length);
+    };
+    updateCart();
+
+    window.addEventListener('futsalhub_cart_changed', updateCart);
 
     const savedTheme = localStorage.getItem('futsalhub_theme');
     if (savedTheme === 'dark') {
@@ -47,7 +60,10 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('futsalhub_cart_changed', updateCart);
+    };
   }, []);
 
   const toggleTheme = () => {
@@ -56,12 +72,10 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
       document.documentElement.classList.remove('dark');
       localStorage.setItem('futsalhub_theme', 'light');
       setIsDarkMode(false);
-      toast.info('Mode terang diaktifkan');
     } else {
       document.documentElement.classList.add('dark');
       localStorage.setItem('futsalhub_theme', 'dark');
       setIsDarkMode(true);
-      toast.info('Mode gelap diaktifkan');
     }
   };
 
@@ -69,7 +83,6 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
     clearStoredUser();
     setCurrentUser(null);
     setDropdownOpen(false);
-    toast.success('Berhasil keluar dari akun.');
     router.push('/');
   };
 
@@ -89,7 +102,8 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
   const isInternalStaff = currentUser?.role === 'admin' || currentUser?.role === 'owner';
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FDFBF7]/90 dark:bg-[#121417]/90 backdrop-blur-md border-b border-stone-200/80 dark:border-white/10 transition-colors">
+    <>
+      <header className="sticky top-0 z-40 bg-[#FDFBF7]/90 dark:bg-[#121417]/90 backdrop-blur-md border-b border-stone-200/80 dark:border-white/10 transition-colors">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         
         {/* Tombol Logo */}
@@ -137,6 +151,22 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
         {/* Zona Aksi Kanan */}
         <div className="flex items-center gap-3">
           
+          {/* Tombol Keranjang Sewa */}
+          <button
+            type="button"
+            onClick={() => setIsCartOpen(true)}
+            aria-label="Keranjang Sewa Lapangan"
+            className="relative p-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-[#1A1D23] text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 shadow-sm transition-all focus:outline-none cursor-pointer"
+            title="Keranjang Sewa Lapangan"
+          >
+            <ShoppingBag className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-emerald-600 text-white text-[10px] font-black flex items-center justify-center shadow-md animate-pulse">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
           {/* Tombol Toggle Tema */}
           <button
             type="button"
@@ -217,6 +247,15 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
                       Profil Saya
                     </Link>
 
+                    <Link
+                      href="/profile#riwayat"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors"
+                    >
+                      <Calendar className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      Riwayat & Status Booking
+                    </Link>
+
                     {isInternalStaff && (
                       <Link
                         href={currentUser.role === 'admin' ? '/admin' : '/owner'}
@@ -255,5 +294,8 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
 
       </div>
     </header>
+    {/* Pop-up Keranjang Sewa */}
+    <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+    </>
   );
 }
