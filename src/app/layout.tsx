@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "FUTSALHUB - Integrated Arena Booking System",
@@ -13,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="id" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
         {children}
       </body>
