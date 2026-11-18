@@ -5,7 +5,7 @@ interface EmblemProps {
   className?: string;
 }
 
-export default function FutsalEmblem({ className = "w-8 h-8 text-emerald-700" }: EmblemProps) {
+export default function FutsalEmblem({ className = "w-8 h-8 text-[#1456D6] dark:text-[#B8F03C]" }: EmblemProps) {
   return (
     <svg
       viewBox="0 0 48 48"
@@ -21,7 +21,7 @@ export default function FutsalEmblem({ className = "w-8 h-8 text-emerald-700" }:
         stroke="currentColor"
         strokeWidth="2.5"
         fill="currentColor"
-        fillOpacity="0.06"
+        fillOpacity="0.08"
       />
       {/* Poligon Panel Tengah Bola */}
       <polygon
