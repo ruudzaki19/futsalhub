@@ -27,6 +27,8 @@ import {
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import PaymentInstructionModal from '../../components/PaymentInstructionModal';
+import Badge from '../../components/ui/Badge';
+import Button from '../../components/ui/Button';
 import { 
   getBookedSlotsForDate, 
   getCartSlotsForDate,
@@ -49,10 +51,10 @@ const DAFTAR_LAPANGAN = [
     nama: 'Lapangan 1',
     lokasi: 'Kota Tangerang Selatan',
     rating: 5.0,
-    kategori: 'Futsal',
+    kategori: 'Vinyl Interlock',
     hargaSiang: 150000,
     hargaMalam: 170000,
-    imageUrl: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&auto=format&fit=crop&q=80',
+    imageUrl: '/images/lapangan-1.jpg',
     spek: 'Vinyl Interlock Standard Turnamen Resmi (Ukuran 28 x 16 m)',
   },
   {
@@ -60,22 +62,22 @@ const DAFTAR_LAPANGAN = [
     nama: 'Lapangan 2',
     lokasi: 'Kota Tangerang Selatan',
     rating: 4.95,
-    kategori: 'Futsal',
-    hargaSiang: 150000,
-    hargaMalam: 170000,
-    imageUrl: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1000&auto=format&fit=crop&q=80',
-    spek: 'Vinyl Interlock Peredam Kejut Maksimal (Ukuran 28 x 16 m)',
+    kategori: 'Taraflex Pro',
+    hargaSiang: 140000,
+    hargaMalam: 165000,
+    imageUrl: '/images/lapangan-2.jpg',
+    spek: 'Taraflex Pro Peredam Kejut Maksimal (Ukuran 28 x 16 m)',
   },
   {
     id: 3,
     nama: 'Lapangan 3',
     lokasi: 'Kota Tangerang Selatan',
     rating: 4.98,
-    kategori: 'Futsal',
-    hargaSiang: 150000,
-    hargaMalam: 170000,
-    imageUrl: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1000&auto=format&fit=crop&q=80',
-    spek: 'Vinyl Interlock Grip Optimal & Sirkulasi Indoor Sejuk (Ukuran 28 x 16 m)',
+    kategori: 'Polypropylene',
+    hargaSiang: 160000,
+    hargaMalam: 180000,
+    imageUrl: '/images/lapangan-3.jpg',
+    spek: 'Polypropylene Interlock Grip Optimal & Sirkulasi Indoor Sejuk (Ukuran 28 x 16 m)',
   },
 ];
 
@@ -179,17 +181,15 @@ export default function CourtSchedulePage() {
     return getCartSlotsForDate(currentCourt.id, selectedDate);
   }, [currentCourt.id, selectedDate, refreshKey, isMounted]);
 
-  // SOLUSI CERDAS SEWA BANYAK JAM (1, 2, 3, 4 Jam Beruntun)
+  // SOLUSI SEWA BANYAK JAM (1, 2, 3, 4 Jam Beruntun)
   const handleSlotClick = (startIndex: number) => {
     const neededCount = durasiBermain;
     const requestedSlots: typeof JAM_OPERASIONAL = [];
 
-    // Cek apakah slot berurutan melebihi jam tutup
     if (startIndex + neededCount > JAM_OPERASIONAL.length) {
       return;
     }
 
-    // Periksa apakah ada slot yang bentrok / sudah terisi / sudah di keranjang
     for (let i = 0; i < neededCount; i++) {
       const slot = JAM_OPERASIONAL[startIndex + i];
       if (bookedSlots.includes(slot.jam) || cartSlots.includes(slot.jam)) {
@@ -198,23 +198,19 @@ export default function CourtSchedulePage() {
       requestedSlots.push(slot);
     }
 
-    // Cek apakah slot yang sama sudah dipilih
     const alreadySelected = requestedSlots.every((r) => 
       selectedSlots.some((s) => s.jam === r.jam)
     );
 
     if (alreadySelected) {
-      // Unselect
       const jamsToRemove = requestedSlots.map((r) => r.jam);
       setSelectedSlots(selectedSlots.filter((s) => !jamsToRemove.includes(s.jam)));
     } else {
-      // Select slot beruntun
       const newItems: SelectedSlot[] = requestedSlots.map((r) => ({ jam: r.jam, harga: r.harga }));
       setSelectedSlots(newItems);
     }
   };
 
-  // Ringkasan Label Range Jam
   const rangeLabel = useMemo(() => {
     if (selectedSlots.length === 0) return '';
     const sorted = [...selectedSlots].sort((a, b) => a.jam.localeCompare(b.jam));
@@ -227,7 +223,6 @@ export default function CourtSchedulePage() {
     return selectedSlots.reduce((acc, curr) => acc + curr.harga, 0);
   }, [selectedSlots]);
 
-  // Tambahkan ke Keranjang: langsung hilangkan floating bottom bar (+ keranjang)
   const handleAddToCart = () => {
     if (selectedSlots.length === 0) return;
 
@@ -252,11 +247,9 @@ export default function CourtSchedulePage() {
     };
 
     addToCart(newCartItem);
-    // Kosongkan slot terpilih agar bottom bar segera hilang
     setSelectedSlots([]);
   };
 
-  // Lanjut ke Checkout Langsung
   const handleDirectCheckout = () => {
     if (selectedSlots.length === 0) return;
 
@@ -273,7 +266,6 @@ export default function CourtSchedulePage() {
     setShowCheckoutModal(true);
   };
 
-  // Submit Checkout & Pembayaran
   const handleBayarSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -345,114 +337,113 @@ export default function CourtSchedulePage() {
   }, [isMounted]);
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#121417] text-stone-900 dark:text-[#F3F4F6] font-sans selection:bg-emerald-200 dark:selection:bg-emerald-900 flex flex-col justify-between transition-colors">
+    <div className="min-h-screen bg-brand-bg dark:bg-brand-ink text-brand-ink dark:text-stone-100 font-sora selection:bg-brand-lime selection:text-brand-navy flex flex-col justify-between transition-colors">
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-6 py-8 flex-1 space-y-8 w-full">
         
-        {/* Tombol Kembali ke Pilih Lapangan */}
+        {/* Navigasi Atas & Status Badge */}
         <div className="flex items-center justify-between">
           <Link
             href="/jadwal"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-600 dark:text-stone-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-dim hover:text-brand-blue dark:hover:text-brand-lime transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Kembali ke Daftar Lapangan</span>
           </Link>
 
-          {/* Indikator Lapangan Aktif (Sesuai Permintaan: Teks Statis Lapangan yang Dipilih) */}
-          <div className="px-4 py-1.5 rounded-full bg-emerald-700 text-white font-black text-xs shadow-xs tracking-wide">
-            {currentCourt.nama}
-          </div>
+          <Badge variant="lime" size="md">
+            <span>{currentCourt.nama} • {currentCourt.kategori}</span>
+          </Badge>
         </div>
 
-        {/* Banner Lapangan Aktif (Tema Hijau) */}
-        <div className="rounded-3xl bg-white dark:bg-[#1A1D23] border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs grid md:grid-cols-12 gap-6 items-center">
+        {/* Banner Lapangan Aktif */}
+        <div className="rounded-2xl bg-white dark:bg-brand-navy/30 border-[1.5px] border-brand-line dark:border-white/10 overflow-hidden shadow-sm grid md:grid-cols-12 gap-6 items-center">
           
-          <div className="md:col-span-4 relative h-48 sm:h-56 w-full overflow-hidden bg-stone-900">
+          <div className="md:col-span-4 relative aspect-[16/10] md:h-full min-h-[200px] w-full overflow-hidden bg-brand-navy">
             <Image
               src={currentCourt.imageUrl}
               alt={currentCourt.nama}
               fill
               className="object-cover"
-              unoptimized
             />
-            <div className="absolute top-3 left-3">
-              <span className="px-2.5 py-1 rounded-md bg-emerald-700 text-white text-[11px] font-bold shadow-sm">
-                Venue Aktif
-              </span>
+            <div className="absolute top-3 left-3 flex items-center gap-2">
+              <Badge variant="navy">Venue #{currentCourt.id}</Badge>
+              <Badge variant="lime">Aktif</Badge>
             </div>
           </div>
 
-          <div className="md:col-span-8 p-6 space-y-2.5">
+          <div className="md:col-span-8 p-6 space-y-3">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-black text-stone-900 dark:text-white">
-                {currentCourt.nama} - FutsalHub Arena
+              <h1 className="font-bebas text-3xl sm:text-4xl text-brand-ink dark:text-white uppercase tracking-tight leading-none">
+                {currentCourt.nama} — FUTSALHUB ARENA
               </h1>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-stone-600 dark:text-stone-400">
-              <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-              <span className="font-bold text-stone-800 dark:text-stone-200">{currentCourt.rating.toFixed(2)}</span>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-brand-dim dark:text-stone-300">
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 text-brand-lime fill-brand-lime" />
+                <span className="font-bold text-brand-ink dark:text-white">{currentCourt.rating.toFixed(2)}</span>
+              </div>
               <span>•</span>
               <span>{currentCourt.lokasi}</span>
               <span>•</span>
-              <span className="text-emerald-700 dark:text-emerald-400 font-semibold">{currentCourt.spek}</span>
+              <span className="text-brand-blue dark:text-brand-lime font-semibold">{currentCourt.spek}</span>
             </div>
 
-            <div className="flex items-center gap-4 text-xs pt-1">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span>Tarif Siang (08:00 - 17:00): <strong>{formatRupiah(currentCourt.hargaSiang)}/jam</strong></span>
+            <div className="flex flex-wrap items-center gap-6 text-xs pt-1 border-t border-brand-line dark:border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-brand-blue" />
+                <span>Tarif Siang (08:00 - 15:00): <strong className="font-bebas text-base text-brand-blue dark:text-brand-lime">{formatRupiah(currentCourt.hargaSiang)}</strong>/jam</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
-                <span>Tarif Malam (17:00 - 00:00): <strong>{formatRupiah(currentCourt.hargaMalam)}/jam</strong></span>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-brand-navy dark:bg-brand-lime" />
+                <span>Tarif Malam (15:00 - 00:00): <strong className="font-bebas text-base text-brand-navy dark:text-white">{formatRupiah(currentCourt.hargaMalam)}</strong>/jam</span>
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* Section: Kontrol Jadwal & Ketersediaan Jam (Sesuai Gambar 5 dengan Tema Hijau) */}
-        <div className="bg-white dark:bg-[#1A1D23] border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-8 space-y-8 shadow-xs">
+        {/* Section: Kontrol Jadwal & Ketersediaan Jam */}
+        <div className="bg-white dark:bg-brand-navy/30 border-[1.5px] border-brand-line dark:border-white/10 rounded-2xl p-6 sm:p-8 space-y-8 shadow-sm">
           
-          {/* Header & Filter Tanggal (Hanya input kalender, tombol Hari Ini & Besok dihilangkan sesuai permintaan) */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-stone-100 dark:border-stone-800">
+          {/* Header & Filter Tanggal */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-brand-line dark:border-white/10">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60 dark:border-emerald-800/40 text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-2">
-                Ketersediaan: {currentCourt.nama}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-navy text-brand-lime text-xs font-bebas tracking-wider uppercase mb-2">
+                Jadwal 16 Jam Slot
               </div>
-              <h2 className="text-xl font-black text-stone-900 dark:text-white">
-                Ketersediaan Jadwal Jam (08:00 - 00:00)
+              <h2 className="font-bebas text-3xl text-brand-ink dark:text-white uppercase tracking-tight">
+                KETERSEDIAAN JADWAL (08:00 - 00:00 WIB)
               </h2>
-              <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
-                Pilih tanggal dan tentukan jam bermain Anda. Klik slot untuk memasukkannya ke Jadwal Dipilih.
+              <p className="font-sora text-xs sm:text-sm text-brand-dim dark:text-stone-400">
+                Pilih tanggal dan tentukan jam bermain tim. Klik slot untuk memasukkannya ke Jadwal Dipilih.
               </p>
             </div>
 
-            {/* Pemilih Tanggal Langsung dari Kalender */}
-            <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs self-start sm:self-auto">
-              <CalendarIcon className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            {/* Pemilih Tanggal Kalender */}
+            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-brand-bg dark:bg-brand-navy/60 border-[1.5px] border-brand-line dark:border-white/10 text-xs self-start sm:self-auto shadow-sm">
+              <CalendarIcon className="w-4 h-4 text-brand-blue dark:text-brand-lime" />
               <input
                 type="date"
                 value={selectedDate}
                 min={todayStr}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="bg-transparent font-bold text-stone-900 dark:text-stone-100 outline-none cursor-pointer"
+                className="bg-transparent font-bold text-brand-ink dark:text-white outline-none cursor-pointer"
               />
             </div>
           </div>
 
-          {/* FITUR KHUSUS: MULTI-HOUR SELECTION (SOLUSI SEWA LEBIH DARI 1 JAM) */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* MULTI-HOUR SELECTION */}
+          <div className="p-4 sm:p-5 rounded-xl bg-brand-bg dark:bg-brand-navy/60 border-[1.5px] border-brand-line dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 dark:text-emerald-300">
-                <Zap className="w-4 h-4 text-emerald-600 fill-emerald-600" />
-                <span>Pilih Durasi Bermain (Satu Kali Klik):</span>
+              <div className="flex items-center gap-2 text-xs font-bold text-brand-ink dark:text-white">
+                <Zap className="w-4 h-4 text-brand-blue dark:text-brand-lime" />
+                <span className="uppercase tracking-wider font-bebas text-sm">Pilih Durasi Bermain Sekaligus:</span>
               </div>
-              <p className="text-[11px] text-stone-600 dark:text-stone-400">
-                Pilih 1 jam, 2 jam, atau pilih custom bebas hingga 16 jam, lalu klik jam mulai Anda.
+              <p className="text-[11px] text-brand-dim dark:text-stone-400">
+                Tentukan 1 jam, 2 jam, atau pilih custom durasi, lalu klik jam mulai pertandingan.
               </p>
             </div>
 
@@ -460,10 +451,10 @@ export default function CourtSchedulePage() {
               <button
                 type="button"
                 onClick={() => setDurasiBermain(1)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bebas tracking-wider uppercase transition-all cursor-pointer border-[1.5px] ${
                   durasiBermain === 1
-                    ? 'bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-500/40'
-                    : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:border-emerald-500'
+                    ? 'bg-brand-navy text-brand-lime border-brand-navy shadow-hard-lime dark:bg-brand-lime dark:text-brand-navy'
+                    : 'bg-white dark:bg-brand-navy/50 text-brand-ink dark:text-stone-300 border-brand-line dark:border-white/10 hover:border-brand-navy'
                 }`}
               >
                 1 Jam
@@ -472,10 +463,10 @@ export default function CourtSchedulePage() {
               <button
                 type="button"
                 onClick={() => setDurasiBermain(2)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bebas tracking-wider uppercase transition-all cursor-pointer border-[1.5px] ${
                   durasiBermain === 2
-                    ? 'bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-500/40'
-                    : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:border-emerald-500'
+                    ? 'bg-brand-navy text-brand-lime border-brand-navy shadow-hard-lime dark:bg-brand-lime dark:text-brand-navy'
+                    : 'bg-white dark:bg-brand-navy/50 text-brand-ink dark:text-stone-300 border-brand-line dark:border-white/10 hover:border-brand-navy'
                 }`}
               >
                 2 Jam
@@ -490,53 +481,53 @@ export default function CourtSchedulePage() {
                       setDurasiBermain(val);
                     }
                   }}
-                  className={`appearance-none px-3.5 py-2 pr-7 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                  className={`appearance-none px-4 py-2 pr-8 rounded-xl text-xs font-bebas tracking-wider uppercase transition-all cursor-pointer border-[1.5px] ${
                     durasiBermain >= 3
-                      ? 'bg-emerald-700 text-white border-emerald-700 shadow-sm ring-2 ring-emerald-500/40'
-                      : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:border-emerald-500'
+                      ? 'bg-brand-navy text-brand-lime border-brand-navy shadow-hard-lime dark:bg-brand-lime dark:text-brand-navy'
+                      : 'bg-white dark:bg-brand-navy/50 text-brand-ink dark:text-stone-300 border-brand-line dark:border-white/10 hover:border-brand-navy'
                   }`}
                 >
-                  <option value="custom" disabled={durasiBermain >= 3} className="bg-white dark:bg-[#1A1D23] text-stone-900 dark:text-white">
-                    {durasiBermain >= 3 ? `Custom: ${durasiBermain} Jam` : 'Pilihan Custom (3-16 Jam)'}
+                  <option value="custom" disabled={durasiBermain >= 3} className="bg-white dark:bg-brand-navy text-brand-ink dark:text-white font-sora">
+                    {durasiBermain >= 3 ? `Custom: ${durasiBermain} Jam` : 'Custom (3-16 Jam)'}
                   </option>
                   {Array.from({ length: 14 }, (_, i) => i + 3).map((num) => (
-                    <option key={num} value={num} className="bg-white dark:bg-[#1A1D23] text-stone-900 dark:text-white font-medium">
-                      {num} Jam {num === 16 ? '(Maksimal Operasional)' : ''}
+                    <option key={num} value={num} className="bg-white dark:bg-brand-navy text-brand-ink dark:text-white font-sora">
+                      {num} Jam {num === 16 ? '(Maksimal)' : ''}
                     </option>
                   ))}
                 </select>
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <span className={`text-[10px] ${durasiBermain >= 3 ? 'text-white' : 'text-stone-400'}`}>▼</span>
+                <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-xs">
+                  ▼
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Legenda Status Slot (Tema Hijau & Amber Hold 10 Menit) */}
+          {/* Legenda Status Slot */}
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs">
-            <div className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-600" />
-              <span className="text-stone-600 dark:text-stone-400">⚪ Tersedia (Bisa Dipilih)</span>
+            <div className="flex items-center gap-2">
+              <span className="w-3.5 h-3.5 rounded-md bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/20" />
+              <span className="text-brand-dim dark:text-stone-300 font-medium">Tersedia</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-emerald-600 border border-emerald-600" />
-              <span className="text-stone-600 dark:text-stone-400">🟢 Jadwal Dipilih (Aktif)</span>
+            <div className="flex items-center gap-2">
+              <span className="w-3.5 h-3.5 rounded-md bg-brand-navy border-[1.5px] border-brand-lime" />
+              <span className="text-brand-dim dark:text-stone-300 font-bold text-brand-blue dark:text-brand-lime">Dipilih (Aktif)</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-yellow-100 dark:bg-yellow-900/60 border border-yellow-300 dark:border-yellow-700" />
-              <span className="text-yellow-800 dark:text-yellow-300 font-semibold">🟡 Di Keranjang Anda</span>
+            <div className="flex items-center gap-2">
+              <span className="w-3.5 h-3.5 rounded-md bg-yellow-100 border-[1.5px] border-yellow-400" />
+              <span className="text-yellow-800 dark:text-yellow-400 font-semibold">Di Keranjang</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-amber-500 border border-amber-500 animate-pulse" />
-              <span className="text-amber-700 dark:text-amber-400 font-semibold">🟠 Sedang Dipesan (Terkunci 10 Mnt)</span>
+            <div className="flex items-center gap-2">
+              <span className="w-3.5 h-3.5 rounded-md bg-amber-500 border-[1.5px] border-amber-600 animate-pulse" />
+              <span className="text-amber-700 dark:text-amber-400 font-semibold">Terkunci 10 Mnt</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-stone-200 dark:bg-stone-700 border border-stone-300 dark:border-stone-600 opacity-60" />
-              <span className="text-stone-600 dark:text-stone-400">🔘 Terisi / Terkonfirmasi</span>
+            <div className="flex items-center gap-2">
+              <span className="w-3.5 h-3.5 rounded-md bg-stone-200 dark:bg-stone-800 border-[1.5px] border-stone-300 dark:border-stone-700 opacity-60" />
+              <span className="text-stone-400 font-medium">Terisi</span>
             </div>
           </div>
 
-          {/* Grid 16 Slot Waktu (08:00 sampai 00:00 - Sesuai Gambar 5) */}
+          {/* Grid 16 Slot Waktu (08:00 sampai 00:00) */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
             {JAM_OPERASIONAL.map((item, idx) => {
               const slotDetail = liveSlotDetails[item.jam];
@@ -553,16 +544,16 @@ export default function CourtSchedulePage() {
                   type="button"
                   disabled={isDisabled}
                   onClick={() => handleSlotClick(idx)}
-                  className={`p-3.5 rounded-2xl border text-left transition-all relative ${
+                  className={`p-3.5 rounded-xl border-[1.5px] text-left transition-all relative ${
                     isPermanentlyBooked
                       ? 'bg-stone-100 dark:bg-stone-800/40 border-stone-200 dark:border-stone-800 text-stone-400 dark:text-stone-500 cursor-not-allowed opacity-60'
                       : isLocked10Min
-                      ? 'bg-amber-500/10 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800/80 text-amber-900 dark:text-amber-200 cursor-not-allowed shadow-xs'
+                      ? 'bg-amber-500/10 dark:bg-amber-950/40 border-amber-400 text-amber-900 dark:text-amber-200 cursor-not-allowed shadow-xs'
                       : isInCart
-                      ? 'bg-yellow-50/80 dark:bg-yellow-950/30 border-yellow-300 dark:border-yellow-800/60 text-stone-600 dark:text-stone-400 cursor-not-allowed'
+                      ? 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-400 text-stone-600 dark:text-stone-300 cursor-not-allowed'
                       : isSelected
-                      ? 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-600 text-stone-900 dark:text-white shadow-xs ring-2 ring-emerald-500/30'
-                      : 'bg-white dark:bg-stone-800/60 border-stone-200 dark:border-stone-700/80 hover:border-emerald-600 dark:hover:border-emerald-500 hover:shadow-xs cursor-pointer'
+                      ? 'bg-brand-navy text-white border-brand-lime shadow-hard-lime ring-2 ring-brand-lime/30'
+                      : 'bg-white dark:bg-brand-navy/40 border-brand-line dark:border-white/10 hover:border-brand-navy dark:hover:border-brand-lime hover:shadow-hard-navy cursor-pointer'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1.5">
@@ -574,9 +565,9 @@ export default function CourtSchedulePage() {
                         Terisi
                       </span>
                     ) : isLocked10Min ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 flex items-center gap-1 border border-amber-300 dark:border-amber-700 animate-pulse">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 flex items-center gap-1 border border-amber-400 animate-pulse">
                         <Clock className="w-2.5 h-2.5" />
-                        Terkunci 10 Mnt
+                        Terkunci 10m
                       </span>
                     ) : isInCart ? (
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-100 dark:bg-yellow-900/60 text-yellow-800 dark:text-yellow-300 flex items-center gap-1">
@@ -584,25 +575,25 @@ export default function CourtSchedulePage() {
                         Di Keranjang
                       </span>
                     ) : isSelected ? (
-                      <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold">
+                      <span className="w-4 h-4 rounded-full bg-brand-lime text-brand-navy flex items-center justify-center text-[10px] font-bold">
                         ✓
                       </span>
                     ) : (
-                      <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
+                      <span className="text-[10px] font-bold text-brand-blue dark:text-brand-lime">
                         Tersedia
                       </span>
                     )}
                   </div>
 
                   <div className="flex items-baseline justify-between text-[11px]">
-                    <span className="capitalize text-stone-500 dark:text-stone-400">
+                    <span className="capitalize text-brand-dim dark:text-stone-400">
                       {isLocked10Min ? (
                         <span className="text-amber-700 dark:text-amber-400 font-medium">Sedang dipesan</span>
                       ) : (
                         `Tarif ${item.tipe}`
                       )}
                     </span>
-                    <span className={`font-bold ${isDisabled && !isLocked10Min ? 'text-stone-400' : isLocked10Min ? 'text-amber-800 dark:text-amber-300' : 'text-stone-800 dark:text-stone-200'}`}>
+                    <span className={`font-mono font-bold ${isDisabled && !isLocked10Min ? 'text-stone-400' : isLocked10Min ? 'text-amber-800 dark:text-amber-300' : isSelected ? 'text-brand-lime' : 'text-brand-ink dark:text-white'}`}>
                       {formatRupiah(item.harga)}
                     </span>
                   </div>
@@ -615,72 +606,76 @@ export default function CourtSchedulePage() {
 
       </main>
 
-      {/* Pop-up Bar Melayang di Bawah Layar */}
+      {/* Floating Bottom Bar */}
       {selectedSlots.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-2xl animate-in slide-in-from-bottom duration-200">
-          <div className="p-4 sm:p-5 rounded-3xl bg-stone-900/95 dark:bg-stone-900/95 text-white backdrop-blur-md shadow-2xl border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-brand-navy text-white backdrop-blur-md shadow-hard-navy-lg border-[1.5px] border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-brand-lime animate-ping" />
                 <span className="text-xs text-stone-300 font-bold">
                   {currentCourt.nama} • {selectedDate}
                 </span>
               </div>
               <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-base sm:text-lg font-black text-emerald-400">
+                <span className="font-bebas text-2xl text-brand-lime">
                   {rangeLabel}
                 </span>
-                <span className="text-xs text-stone-300 font-semibold">
+                <span className="font-mono text-xs text-stone-300 font-semibold">
                   ({formatRupiah(subtotal)})
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-2.5">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={handleAddToCart}
-                className="px-4 py-2.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold border border-stone-700 transition-all cursor-pointer flex items-center gap-1.5"
+                className="bg-white/10 hover:bg-white/20 text-white border-white/30 font-bebas text-base uppercase tracking-wider"
               >
-                <ShoppingBag className="w-3.5 h-3.5 text-emerald-400" />
+                <ShoppingBag className="w-4 h-4 mr-1 text-brand-lime" />
                 <span>+ Keranjang</span>
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="sm"
                 onClick={handleDirectCheckout}
-                className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-1.5"
+                className="font-bebas text-base uppercase tracking-wider shadow-hard-navy"
               >
                 <span>Langsung Pesan</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* MODAL PROMPT LOGIN (JIKA BELUM MASUK) */}
+      {/* MODAL PROMPT LOGIN */}
       {showLoginPrompt && isMounted && createPortal(
-        <div className="fixed inset-0 z-[9999] overflow-y-auto flex min-h-screen items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="relative bg-white dark:bg-[#1A1D23] w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl border border-stone-200 dark:border-stone-800 space-y-5 text-center my-auto">
-            <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 flex items-center justify-center mx-auto text-amber-600 dark:text-amber-400">
+        <div className="fixed inset-0 z-[9999] overflow-y-auto flex min-h-screen items-center justify-center p-4 bg-brand-navy/70 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative bg-white dark:bg-brand-navy w-full max-w-md rounded-2xl p-6 sm:p-7 shadow-hard-navy-lg border-[1.5px] border-brand-line dark:border-white/10 space-y-5 text-center my-auto">
+            <div className="w-14 h-14 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 text-amber-600 flex items-center justify-center mx-auto">
               <Lock className="w-7 h-7" />
             </div>
 
             <div className="space-y-1.5">
-              <h3 className="text-lg font-black text-stone-900 dark:text-white">
+              <h3 className="font-bebas text-2xl text-brand-ink dark:text-white uppercase tracking-tight">
                 Silakan Masuk Terlebih Dahulu
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
-                Anda perlu masuk ke akun FutsalHub untuk melanjutkan proses booking lapangan agar jadwal resmi terdaftar atas nama tim Anda.
+              <p className="font-sora text-xs text-brand-dim dark:text-stone-300 leading-relaxed">
+                Anda perlu masuk ke akun FutsalHub untuk melanjutkan booking lapangan agar jadwal resmi terdaftar atas nama tim Anda.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-left space-y-1">
-              <span className="text-[11px] font-bold text-stone-500 block uppercase tracking-wider">
+            <div className="p-3.5 rounded-xl bg-brand-bg dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 text-left space-y-1">
+              <span className="text-[10px] font-bold text-brand-dim block uppercase tracking-wider">
                 Jadwal yang tersimpan:
               </span>
-              <span className="text-xs font-bold text-stone-900 dark:text-white">
+              <span className="text-xs font-bold text-brand-ink dark:text-white">
                 {currentCourt.nama} • {rangeLabel} ({formatRupiah(subtotal)})
               </span>
             </div>
@@ -688,15 +683,18 @@ export default function CourtSchedulePage() {
             <div className="space-y-2.5 pt-1">
               <Link
                 href="/login"
-                className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs tracking-wide shadow-sm transition-all block"
+                className="w-full inline-block"
               >
-                Masuk / Login Sekarang
+                <Button variant="primary" size="lg" className="w-full font-bebas text-lg tracking-wider uppercase shadow-hard-navy">
+                  <span>Masuk / Login Sekarang</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
               </Link>
-              <div className="text-center text-xs text-stone-500">
+              <div className="text-center text-xs text-brand-dim dark:text-stone-400">
                 Belum punya akun?{' '}
                 <Link
                   href="/register"
-                  className="font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+                  className="font-bold text-brand-blue dark:text-brand-lime hover:underline"
                 >
                   Daftar akun baru
                 </Link>
@@ -704,7 +702,7 @@ export default function CourtSchedulePage() {
               <button
                 type="button"
                 onClick={() => setShowLoginPrompt(false)}
-                className="w-full py-2.5 text-xs font-semibold text-stone-500 hover:text-stone-800 cursor-pointer"
+                className="w-full py-2 text-xs font-semibold text-brand-dim dark:text-stone-400 hover:text-brand-ink dark:hover:text-white cursor-pointer"
               >
                 Batal
               </button>
@@ -714,68 +712,61 @@ export default function CourtSchedulePage() {
         document.body
       )}
 
-      {/* MODAL CHECKOUT TENGAH PAGE: DIJAMIN PAS & KELIHATAN SEMUANYA */}
+      {/* MODAL CHECKOUT TENGAH */}
       {showCheckoutModal && isMounted && createPortal(
-        <div className="fixed inset-0 z-[9999] overflow-y-auto flex min-h-screen items-center justify-center p-3 sm:p-5 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="relative bg-white dark:bg-[#1A1D23] w-full max-w-2xl max-h-[85vh] rounded-3xl shadow-2xl border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col my-auto">
+        <div className="fixed inset-0 z-[9999] overflow-y-auto flex min-h-screen items-center justify-center p-3 sm:p-5 bg-brand-navy/70 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative bg-white dark:bg-brand-navy w-full max-w-2xl max-h-[88vh] rounded-2xl shadow-hard-navy-lg border-[1.5px] border-brand-line dark:border-white/10 overflow-hidden flex flex-col my-auto">
             
-            {/* Header Modal (Tetap Terlihat di Atas) */}
-            <div className="flex-shrink-0 px-6 py-4 border-b border-stone-100 dark:border-stone-800 flex items-center justify-between bg-white dark:bg-[#1A1D23]">
+            {/* Header Modal */}
+            <div className="flex-shrink-0 px-6 py-4 border-b border-brand-line dark:border-white/10 flex items-center justify-between bg-white dark:bg-brand-navy">
               <button
                 type="button"
                 onClick={() => setShowCheckoutModal(false)}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-dim hover:text-brand-ink dark:hover:text-white cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Kembali ke Jadwal</span>
               </button>
 
-              <h4 className="text-sm font-black text-stone-900 dark:text-white uppercase tracking-wider">
+              <h4 className="font-bebas text-xl text-brand-ink dark:text-white uppercase tracking-wider">
                 Konfirmasi Checkout
               </h4>
 
               <button
                 type="button"
                 onClick={() => setShowCheckoutModal(false)}
-                className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 cursor-pointer"
+                className="p-1.5 rounded-lg text-brand-dim hover:text-brand-ink dark:hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Form & Konten yang Bisa Di-scroll dengan Sempurna */}
+            {/* Form Konten Scrollable */}
             <form id="checkout-form" onSubmit={handleBayarSubmit} className="flex-1 overflow-y-auto p-6 sm:p-7 space-y-6">
               
-              {/* Box Rincian Lapangan Terpilih */}
-              <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 space-y-2 text-xs">
+              {/* Box Rincian Lapangan */}
+              <div className="p-4 rounded-xl bg-brand-bg dark:bg-brand-navy/60 border-[1.5px] border-brand-line dark:border-white/10 space-y-2 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-stone-900 dark:text-white">
+                  <span className="font-bold text-brand-ink dark:text-white uppercase tracking-wider text-[11px]">
                     Venue Terpilih:
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-700 text-white font-bold text-[10px]">
-                    {currentCourt.nama}
-                  </span>
+                  <Badge variant="navy">{currentCourt.nama}</Badge>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-stone-600 dark:text-stone-300 pt-1">
-                  <div>Tanggal Main: <strong className="text-stone-900 dark:text-white">{selectedDate}</strong></div>
-                  <div>Jam Bermain: <strong className="text-emerald-700 dark:text-emerald-400">{rangeLabel}</strong></div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-brand-dim dark:text-stone-300 pt-1">
+                  <div>Tanggal Main: <strong className="text-brand-ink dark:text-white">{selectedDate}</strong></div>
+                  <div>Jam Bermain: <strong className="text-brand-blue dark:text-brand-lime">{rangeLabel}</strong></div>
                 </div>
               </div>
 
               {/* Data Penyewa */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700">
-                    <span className="text-[10px]">▶</span>
-                  </div>
-                  <h4 className="text-xs font-bold text-stone-900 dark:text-white uppercase tracking-wider">
-                    Data Identitas Pemesan
-                  </h4>
-                </div>
+                <h4 className="font-bebas text-lg text-brand-ink dark:text-white uppercase tracking-wider">
+                  Data Identitas Pemesan
+                </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="sm:col-span-2">
-                    <label className="text-[11px] font-bold text-stone-500 uppercase block mb-1">
+                  <div className="sm:col-span-2 space-y-1">
+                    <label className="text-[11px] font-bold text-brand-dim uppercase block">
                       Nama Lengkap Pemesan / Tim
                     </label>
                     <input
@@ -784,16 +775,16 @@ export default function CourtSchedulePage() {
                       placeholder="Nama Lengkap"
                       value={penyewaNama}
                       onChange={(e) => setPenyewaNama(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-900 dark:text-white focus:outline-emerald-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 text-xs font-semibold text-brand-ink dark:text-white focus:outline-none focus:border-brand-blue"
                     />
                   </div>
 
-                  <div>
-                    <label className="text-[11px] font-bold text-stone-500 uppercase block mb-1">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-brand-dim uppercase block">
                       Nomor WhatsApp
                     </label>
-                    <div className="flex items-center rounded-xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 px-3 py-1 focus-within:border-emerald-500">
-                      <span className="text-xs font-bold text-stone-600 dark:text-stone-300 mr-2">
+                    <div className="flex items-center rounded-xl bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 px-3 py-1">
+                      <span className="text-xs font-bold text-brand-dim mr-2">
                         +62
                       </span>
                       <input
@@ -802,13 +793,13 @@ export default function CourtSchedulePage() {
                         placeholder="812345678"
                         value={penyewaPhone.replace(/^\+62/, '')}
                         onChange={(e) => setPenyewaPhone(e.target.value)}
-                        className="w-full bg-transparent text-xs font-semibold text-stone-900 dark:text-white outline-none py-1.5"
+                        className="w-full bg-transparent text-xs font-semibold text-brand-ink dark:text-white outline-none py-1.5"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-[11px] font-bold text-stone-500 uppercase block mb-1">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-brand-dim uppercase block">
                       Alamat Email
                     </label>
                     <input
@@ -816,84 +807,74 @@ export default function CourtSchedulePage() {
                       placeholder="email@domain.com"
                       value={penyewaEmail}
                       onChange={(e) => setPenyewaEmail(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-900 dark:text-white focus:outline-emerald-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 text-xs font-semibold text-brand-ink dark:text-white focus:outline-none focus:border-brand-blue"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Skema Bayar Lunas vs DP */}
-              <div className="space-y-3 pt-2 border-t border-stone-100 dark:border-stone-800">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700">
-                    <span className="text-[10px]">▶</span>
-                  </div>
-                  <h4 className="text-xs font-bold text-stone-900 dark:text-white uppercase tracking-wider">
-                    Pilihan Skema Pembayaran
-                  </h4>
-                </div>
+              <div className="space-y-3 pt-2 border-t border-brand-line dark:border-white/10">
+                <h4 className="font-bebas text-lg text-brand-ink dark:text-white uppercase tracking-wider">
+                  Pilihan Skema Pembayaran
+                </h4>
 
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => setTipeBayar('lunas')}
-                    className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
+                    className={`p-3.5 rounded-xl border-[1.5px] text-left cursor-pointer transition-all ${
                       tipeBayar === 'lunas'
-                        ? 'border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/40 text-stone-900 dark:text-white ring-2 ring-emerald-500/20'
-                        : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-600'
+                        ? 'border-brand-blue bg-brand-blue/10 text-brand-ink dark:text-white ring-2 ring-brand-blue/20'
+                        : 'border-brand-line dark:border-white/10 bg-white dark:bg-brand-navy/50 text-brand-dim'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold">Bayar Lunas</span>
-                      <span className="text-[10px] font-black text-emerald-600 px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/60">100%</span>
+                      <span className="font-bebas text-base uppercase">Bayar Lunas</span>
+                      <span className="text-[10px] font-bold text-white px-1.5 py-0.5 rounded bg-brand-navy dark:bg-brand-blue">100%</span>
                     </div>
-                    <span className="text-[11px] text-stone-500 block">Selesai sekali bayar</span>
+                    <span className="text-[11px] text-brand-dim block">Selesai sekali bayar</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setTipeBayar('dp')}
-                    className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
+                    className={`p-3.5 rounded-xl border-[1.5px] text-left cursor-pointer transition-all ${
                       tipeBayar === 'dp'
-                        ? 'border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/40 text-stone-900 dark:text-white ring-2 ring-emerald-500/20'
-                        : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-600'
+                        ? 'border-brand-blue bg-brand-blue/10 text-brand-ink dark:text-white ring-2 ring-brand-blue/20'
+                        : 'border-brand-line dark:border-white/10 bg-white dark:bg-brand-navy/50 text-brand-dim'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold">Bayar DP</span>
-                      <span className="text-[10px] font-black text-amber-600 px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/60">50% Dimuka</span>
+                      <span className="font-bebas text-base uppercase">Bayar DP</span>
+                      <span className="text-[10px] font-bold text-amber-900 px-1.5 py-0.5 rounded bg-amber-400">50% Dimuka</span>
                     </div>
-                    <span className="text-[11px] text-stone-500 block">Sisa pelunasan di kasir venue</span>
+                    <span className="text-[11px] text-brand-dim block">Sisa pelunasan di kasir venue</span>
                   </button>
                 </div>
               </div>
 
-              {/* Metode Pembayaran Lengkap */}
-              <div className="space-y-3 pt-2 border-t border-stone-100 dark:border-stone-800">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700">
-                    <span className="text-[10px]">▶</span>
-                  </div>
-                  <h4 className="text-xs font-bold text-stone-900 dark:text-white uppercase tracking-wider">
-                    Pilih Metode Pembayaran
-                  </h4>
-                </div>
+              {/* Metode Pembayaran */}
+              <div className="space-y-3 pt-2 border-t border-brand-line dark:border-white/10">
+                <h4 className="font-bebas text-lg text-brand-ink dark:text-white uppercase tracking-wider">
+                  Pilih Metode Pembayaran
+                </h4>
 
                 {/* QRIS */}
-                <label className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                <label className={`flex items-center justify-between p-3.5 rounded-xl border-[1.5px] cursor-pointer transition-all ${
                   metodeBayar === 'qris'
-                    ? 'border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/30 ring-2 ring-emerald-500/20'
-                    : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900/40'
+                    ? 'border-brand-blue bg-brand-blue/10 ring-2 ring-brand-blue/20'
+                    : 'border-brand-line dark:border-white/10 bg-white dark:bg-brand-navy/50'
                 }`}>
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-7 rounded-lg bg-red-600 text-white font-black text-[10px] flex items-center justify-center tracking-tighter shadow-xs">
+                    <div className="w-12 h-8 rounded-lg bg-red-600 text-white font-black text-xs flex items-center justify-center tracking-tighter shadow-xs">
                       QRIS
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-stone-900 dark:text-white block">
-                        QRIS Instant (BCA Mobile, Livin, GoPay, OVO, DANA, ShopeePay)
+                      <span className="text-xs font-bold text-brand-ink dark:text-white block">
+                        QRIS Instant (BCA, Livin, GoPay, OVO, DANA, ShopeePay)
                       </span>
-                      <span className="text-[10px] text-emerald-600 font-bold">Bebas Biaya Admin • Verifikasi Otomatis</span>
+                      <span className="text-[10px] text-emerald-600 dark:text-brand-lime font-bold">Bebas Biaya Admin • Verifikasi Otomatis</span>
                     </div>
                   </div>
                   <input
@@ -901,13 +882,13 @@ export default function CourtSchedulePage() {
                     name="metode"
                     checked={metodeBayar === 'qris'}
                     onChange={() => setMetodeBayar('qris')}
-                    className="w-4 h-4 accent-emerald-600"
+                    className="w-4 h-4 accent-brand-blue"
                   />
                 </label>
 
                 {/* Transfer Virtual Account */}
                 <div className="space-y-1.5">
-                  <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-brand-dim uppercase tracking-wider block">
                     Transfer Virtual Account Bank:
                   </span>
                   <div className="grid grid-cols-2 gap-2">
@@ -921,15 +902,15 @@ export default function CourtSchedulePage() {
                         key={bank.id}
                         type="button"
                         onClick={() => setMetodeBayar(bank.id as any)}
-                        className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all ${
+                        className={`p-2.5 rounded-xl border-[1.5px] text-left cursor-pointer transition-all ${
                           metodeBayar === bank.id
-                            ? 'border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/40 font-bold ring-1 ring-emerald-500/30'
-                            : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800/80 text-stone-600'
+                            ? 'border-brand-blue bg-brand-blue/10 font-bold ring-1 ring-brand-blue/30'
+                            : 'border-brand-line dark:border-white/10 bg-white dark:bg-brand-navy/50 text-brand-dim'
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <span className={`w-2.5 h-2.5 rounded-full ${bank.color}`} />
-                          <span className="text-xs text-stone-800 dark:text-stone-200">{bank.label}</span>
+                          <span className="text-xs text-brand-ink dark:text-white">{bank.label}</span>
                         </div>
                       </button>
                     ))}
@@ -938,7 +919,7 @@ export default function CourtSchedulePage() {
 
                 {/* E-Wallet Langsung */}
                 <div className="space-y-1.5">
-                  <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-brand-dim uppercase tracking-wider block">
                     E-Wallet Langsung:
                   </span>
                   <div className="grid grid-cols-2 gap-2">
@@ -952,15 +933,15 @@ export default function CourtSchedulePage() {
                         key={ew.id}
                         type="button"
                         onClick={() => setMetodeBayar(ew.id as any)}
-                        className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all ${
+                        className={`p-2.5 rounded-xl border-[1.5px] text-left cursor-pointer transition-all ${
                           metodeBayar === ew.id
-                            ? 'border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/40 font-bold ring-1 ring-emerald-500/30'
-                            : 'border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800/80 text-stone-600'
+                            ? 'border-brand-blue bg-brand-blue/10 font-bold ring-1 ring-brand-blue/30'
+                            : 'border-brand-line dark:border-white/10 bg-white dark:bg-brand-navy/50 text-brand-dim'
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <span className={`w-2.5 h-2.5 rounded-full ${ew.color}`} />
-                          <span className="text-xs text-stone-800 dark:text-stone-200">{ew.label}</span>
+                          <span className="text-xs text-brand-ink dark:text-white">{ew.label}</span>
                         </div>
                       </button>
                     ))}
@@ -970,28 +951,30 @@ export default function CourtSchedulePage() {
 
             </form>
 
-            {/* Footer Modal (Tetap Terlihat di Bawah - Tidak Terpotong) */}
-            <div className="flex-shrink-0 px-6 py-4 bg-stone-50 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Footer Modal */}
+            <div className="flex-shrink-0 px-6 py-4 bg-brand-bg dark:bg-brand-navy/80 border-t border-brand-line dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <span className="text-[11px] text-stone-500 dark:text-stone-400 block font-semibold">
+                <span className="text-[11px] text-brand-dim block font-semibold">
                   Total Tagihan Sekarang ({selectedSlots.length} Jam):
                 </span>
-                <span className="text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-400">
+                <span className="font-bebas text-3xl text-brand-blue dark:text-brand-lime leading-none block">
                   {formatRupiah(tipeBayar === 'lunas' ? subtotal : Math.round(subtotal * 0.5))}
                 </span>
-                <span className="text-[10px] text-stone-400 block">
+                <span className="text-[10px] text-brand-dim block">
                   {tipeBayar === 'lunas' ? 'Lunas 100%' : 'DP 50% (Sisa di Kasir Venue)'}
                 </span>
               </div>
 
-              <button
+              <Button
                 type="submit"
                 form="checkout-form"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+                variant="primary"
+                size="lg"
+                className="w-full sm:w-auto font-bebas text-xl tracking-wider uppercase shadow-hard-navy"
               >
                 <span>Bayar Sekarang</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+                <ArrowRight className="w-5 h-5 ml-1" />
+              </Button>
             </div>
 
           </div>
@@ -999,7 +982,7 @@ export default function CourtSchedulePage() {
         document.body
       )}
 
-      {/* POPUP INSTRUKSI PEMBAYARAN RESMI (DESAIN TERPADU UNTUK SEMUA LAPANGAN) */}
+      {/* POPUP INSTRUKSI PEMBAYARAN */}
       <PaymentInstructionModal
         isOpen={showPaymentSuccessModal}
         booking={latestBooking}
@@ -1016,4 +999,3 @@ export default function CourtSchedulePage() {
     </div>
   );
 }
-

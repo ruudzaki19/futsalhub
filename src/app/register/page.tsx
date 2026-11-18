@@ -3,13 +3,15 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { Mail, Lock, User, Phone, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FutsalEmblem from '../components/FutsalEmblem';
+import Badge from '../components/ui/Badge';
+import Button from '../components/ui/Button';
 import { saveNewUser } from '../../data/authStore';
 
 export default function RegisterPage() {
@@ -77,203 +79,237 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-stone-800 font-sans flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-brand-bg dark:bg-brand-ink text-brand-ink dark:text-stone-100 font-sora flex flex-col justify-between selection:bg-brand-lime selection:text-brand-navy transition-colors">
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center px-6 py-12 relative overflow-hidden">
-        <div 
-          className="absolute inset-0 pointer-events-none opacity-[0.03] -z-10" 
-          style={{
-            backgroundImage: `radial-gradient(#0F291E 1px, transparent 1px), linear-gradient(to right, #0F291E 1px, transparent 1px)`,
-            backgroundSize: '32px 32px, 64px 64px'
-          }}
-        />
+      <main className="flex-1 max-w-7xl mx-auto px-6 py-10 w-full flex items-center justify-center">
+        {/* Dua Kolom: Kiri Foto Real + Teks Condensed Besar, Kanan Form Bersih */}
+        <div className="w-full grid lg:grid-cols-12 rounded-3xl overflow-hidden border-[1.5px] border-brand-line dark:border-white/10 shadow-hard-navy-lg bg-white dark:bg-brand-navy/30">
+          
+          {/* Kolom Kiri: Foto Futsal Real + Teks Condensed Besar */}
+          <div className="lg:col-span-5 relative hidden lg:flex flex-col justify-between p-10 bg-brand-navy text-white overflow-hidden min-h-[640px]">
+            <div className="absolute inset-0 -z-0">
+              <Image
+                src="/images/login-futsal.jpg"
+                alt="Futsal Team Ready"
+                fill
+                priority
+                className="object-cover opacity-65"
+              />
+              <div className="absolute inset-0 bg-brand-navy/50" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/30 to-transparent" />
+            </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="w-full max-w-lg"
-        >
-          <div className="bg-white/90 backdrop-blur-xl border border-stone-200/90 rounded-3xl p-8 sm:p-10 shadow-xl relative">
-            
-            <div className="text-center space-y-2 mb-8">
-              <div className="inline-flex p-3 rounded-2xl bg-emerald-50 border border-emerald-100 mb-2">
-                <FutsalEmblem className="w-8 h-8 text-emerald-800" />
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <FutsalEmblem className="w-8 h-8" />
+                <span className="font-bebas text-2xl tracking-wider text-white">FUTSALHUB</span>
               </div>
-              <h1 className="text-2xl font-black text-[#0F291E] tracking-tight">
-                Registrasi Akun Baru
-              </h1>
-              <p className="text-xs text-stone-500">
-                Daftarkan akun tim Anda untuk reservasi slot 3 lapangan futsal.
+              <Badge variant="lime">Registrasi Akun</Badge>
+            </div>
+
+            <div className="relative z-10 space-y-4 my-auto">
+              <span className="font-bebas text-brand-lime text-xl tracking-wider uppercase block">
+                Gabung Komunitas Arena
+              </span>
+              <h2 className="font-bebas text-5xl md:text-6xl text-white uppercase tracking-tight leading-[0.92]">
+                DAFTARKAN TIM. <br />
+                KUNCI JADWAL.
+              </h2>
+              <p className="font-sora text-sm text-stone-200 max-w-sm leading-relaxed">
+                Buat akun kapten tim sekarang untuk akses booking 3 lapangan standar FIFA, e-receipt otomatis, dan histori pertandingan.
               </p>
             </div>
 
-            {/* Pemberitahuan Error / Validasi */}
-            {errorMsg && (
-              <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-start gap-3 shadow-xs animate-in fade-in slide-in-from-top-2 duration-200">
-                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
-                <div className="space-y-1.5 flex-1 text-left">
-                  <div className="flex items-center justify-between">
-                    <strong className="block font-black text-rose-900 text-sm">
-                      {errorMsg.title}
-                    </strong>
-                    <button
-                      type="button"
-                      onClick={() => setErrorMsg(null)}
-                      className="text-rose-400 hover:text-rose-700 transition-colors cursor-pointer p-0.5"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <p className="text-stone-700 leading-relaxed text-xs">
-                    {errorMsg.desc}
-                  </p>
-                  {errorMsg.alreadyRegistered && (
-                    <div className="pt-2">
-                      <Link
-                        href="/login"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
-                      >
-                        <span>Langsung Masuk ke Akun Anda</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <form onSubmit={handleRegister} className="space-y-4">
-              
-              <div className="space-y-1.5 text-left">
-                <label className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-                  Nama Lengkap / Kapten Tim
-                </label>
-                <div className="relative flex items-center">
-                  <User className="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" />
-                  <input
-                    type="text"
-                    value={namaLengkap}
-                    onChange={(e) => setNamaLengkap(e.target.value)}
-                    placeholder="Contoh: Budi Pratama"
-                    required
-                    className="w-full pl-10 pr-4 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
-                  />
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5 text-left">
-                  <label className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-                    Alamat Email
-                  </label>
-                  <div className="relative flex items-center">
-                    <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => { setEmail(e.target.value); if (errorMsg) setErrorMsg(null); }}
-                      placeholder="nama@email.com"
-                      required
-                      className="w-full pl-10 pr-4 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 text-left">
-                  <label className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-                    Nomor WhatsApp
-                  </label>
-                  <div className="relative flex items-center">
-                    <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" />
-                    <input
-                      type="tel"
-                      value={noHp}
-                      onChange={(e) => setNoHp(e.target.value)}
-                      placeholder="081234567890"
-                      required
-                      className="w-full pl-10 pr-4 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5 text-left">
-                  <label className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-                    Kata Sandi
-                  </label>
-                  <div className="relative flex items-center">
-                    <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => { setPassword(e.target.value); if (errorMsg) setErrorMsg(null); }}
-                      placeholder="Min. 6 karakter"
-                      required
-                      className="w-full pl-10 pr-10 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 p-1 text-stone-400 hover:text-stone-700"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 text-left">
-                  <label className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-                    Ulangi Kata Sandi
-                  </label>
-                  <div className="relative flex items-center">
-                    <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Samakan sandi"
-                      required
-                      className="w-full pl-10 pr-4 py-3 bg-stone-50/70 border border-stone-200 rounded-xl text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3.5 px-4 bg-[#0F291E] hover:bg-[#143B2C] text-[#FDFBF7] text-sm font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
-              >
-                {isLoading ? (
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <span>Daftar Akun Sekarang</span>
-                    <ArrowRight className="w-4 h-4 text-emerald-400" />
-                  </>
-                )}
-              </button>
-            </form>
-
-            <div className="mt-8 text-center text-xs text-stone-500">
-              Sudah punya akun?{' '}
-              <Link
-                href="/login"
-                className="font-bold text-emerald-800 hover:text-emerald-950 underline underline-offset-4"
-              >
-                Masuk sekarang
-              </Link>
+            <div className="relative z-10 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-stone-300">
+              <span>3 Lapangan Turnamen</span>
+              <span className="font-mono text-brand-lime">Auto-Lock Aktif</span>
             </div>
-
           </div>
-        </motion.div>
+
+          {/* Kolom Kanan: Form Bersih */}
+          <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center">
+            <div className="max-w-lg w-full mx-auto space-y-6">
+              
+              <div className="space-y-1">
+                <span className="font-bebas text-brand-blue dark:text-brand-lime text-base tracking-wider uppercase block">
+                  Registrasi Komunitas & Tim
+                </span>
+                <h1 className="font-bebas text-4xl sm:text-5xl text-brand-ink dark:text-white uppercase tracking-tight leading-none">
+                  DAFTAR AKUN BARU
+                </h1>
+                <p className="font-sora text-xs text-brand-dim dark:text-stone-400">
+                  Isi data di bawah untuk membuat akun pemesanan lapangan futsal.
+                </p>
+              </div>
+
+              {/* Pemberitahuan Error / Validasi */}
+              {errorMsg && (
+                <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border-[1.5px] border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200 text-xs flex items-start gap-3 shadow-xs">
+                  <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+                  <div className="space-y-1.5 flex-1 text-left">
+                    <div className="flex items-center justify-between">
+                      <strong className="block font-bold text-rose-900 dark:text-rose-200 text-sm">
+                        {errorMsg.title}
+                      </strong>
+                      <button
+                        type="button"
+                        onClick={() => setErrorMsg(null)}
+                        className="text-rose-400 hover:text-rose-700 transition-colors cursor-pointer p-0.5"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <p className="text-stone-700 dark:text-stone-300 leading-relaxed text-xs">
+                      {errorMsg.desc}
+                    </p>
+                    {errorMsg.alreadyRegistered && (
+                      <div className="pt-2">
+                        <Link
+                          href="/login"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-navy hover:bg-brand-ink text-white font-bold text-xs shadow-xs transition-all cursor-pointer font-bebas tracking-wider uppercase"
+                        >
+                          <span>Langsung Masuk ke Akun Anda</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleRegister} className="space-y-4">
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-brand-ink dark:text-stone-200 uppercase tracking-wider block">
+                    Nama Lengkap / Kapten Tim
+                  </label>
+                  <div className="relative flex items-center">
+                    <User className="w-4 h-4 text-brand-dim absolute left-3.5 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={namaLengkap}
+                      onChange={(e) => setNamaLengkap(e.target.value)}
+                      placeholder="Contoh: Budi Pratama"
+                      required
+                      className="w-full pl-10 pr-4 py-3 bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 rounded-xl text-sm text-brand-ink dark:text-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-xs font-bold text-brand-ink dark:text-stone-200 uppercase tracking-wider block">
+                      Alamat Email
+                    </label>
+                    <div className="relative flex items-center">
+                      <Mail className="w-4 h-4 text-brand-dim absolute left-3.5 pointer-events-none" />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => { setEmail(e.target.value); if (errorMsg) setErrorMsg(null); }}
+                        placeholder="nama@email.com"
+                        required
+                        className="w-full pl-10 pr-4 py-3 bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 rounded-xl text-sm text-brand-ink dark:text-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-xs font-bold text-brand-ink dark:text-stone-200 uppercase tracking-wider block">
+                      Nomor WhatsApp
+                    </label>
+                    <div className="relative flex items-center">
+                      <Phone className="w-4 h-4 text-brand-dim absolute left-3.5 pointer-events-none" />
+                      <input
+                        type="tel"
+                        value={noHp}
+                        onChange={(e) => setNoHp(e.target.value)}
+                        placeholder="081234567890"
+                        required
+                        className="w-full pl-10 pr-4 py-3 bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 rounded-xl text-sm text-brand-ink dark:text-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-xs font-bold text-brand-ink dark:text-stone-200 uppercase tracking-wider block">
+                      Kata Sandi
+                    </label>
+                    <div className="relative flex items-center">
+                      <Lock className="w-4 h-4 text-brand-dim absolute left-3.5 pointer-events-none" />
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => { setPassword(e.target.value); if (errorMsg) setErrorMsg(null); }}
+                        placeholder="Min. 6 karakter"
+                        required
+                        className="w-full pl-10 pr-10 py-3 bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 rounded-xl text-sm text-brand-ink dark:text-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 p-1 text-brand-dim hover:text-brand-ink dark:hover:text-white cursor-pointer"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-xs font-bold text-brand-ink dark:text-stone-200 uppercase tracking-wider block">
+                      Ulangi Kata Sandi
+                    </label>
+                    <div className="relative flex items-center">
+                      <Lock className="w-4 h-4 text-brand-dim absolute left-3.5 pointer-events-none" />
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Samakan sandi"
+                        required
+                        className="w-full pl-10 pr-4 py-3 bg-white dark:bg-brand-navy/50 border-[1.5px] border-brand-line dark:border-white/10 rounded-xl text-sm text-brand-ink dark:text-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  variant="primary"
+                  size="lg"
+                  className="w-full font-bebas text-xl tracking-wider uppercase shadow-hard-navy"
+                >
+                  {isLoading ? (
+                    <span className="w-5 h-5 border-2 border-brand-navy/30 border-t-brand-navy rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span>Daftar Akun Sekarang</span>
+                      <ArrowRight className="w-5 h-5 ml-1" />
+                    </>
+                  )}
+                </Button>
+              </form>
+
+              <div className="text-center text-xs text-brand-dim dark:text-stone-400">
+                Sudah punya akun?{' '}
+                <Link
+                  href="/login"
+                  className="font-bold text-brand-blue dark:text-brand-lime hover:underline underline-offset-4"
+                >
+                  Masuk ke akun sekarang
+                </Link>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
       </main>
 
       <Footer />
     </div>
   );
 }
-
