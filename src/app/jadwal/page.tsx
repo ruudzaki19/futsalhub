@@ -17,10 +17,9 @@ interface LapanganCardInfo {
   lokasi: string;
   rating: number;
   kategori: string;
-  hargaCoret: number;
-  hargaMulai: number;
+  hargaWeekdays: number;
+  hargaWeekend: number;
   imageUrl: string;
-  deskripsi: string;
 }
 
 const DAFTAR_LAPANGAN: LapanganCardInfo[] = [
@@ -29,33 +28,30 @@ const DAFTAR_LAPANGAN: LapanganCardInfo[] = [
     nama: 'Lapangan 1',
     lokasi: 'Kota Tangerang Selatan',
     rating: 5.0,
-    kategori: 'Vinyl Interlock',
-    hargaCoret: 200000,
-    hargaMulai: 150000,
+    kategori: 'Lantai Vinyl',
+    hargaWeekdays: 150000,
+    hargaWeekend: 180000,
     imageUrl: '/images/lapangan-1.jpg',
-    deskripsi: 'Lantai interlock vinyl resmi turnamen standar FIFA, peredaman hentakan tinggi, dan pencahayaan LED 800 lux anti-silau.',
   },
   {
     id: 2,
     nama: 'Lapangan 2',
     lokasi: 'Kota Tangerang Selatan',
     rating: 4.95,
-    kategori: 'Taraflex Pro',
-    hargaCoret: 200000,
-    hargaMulai: 140000,
+    kategori: 'Lantai Vinyl',
+    hargaWeekdays: 150000,
+    hargaWeekend: 180000,
     imageUrl: '/images/lapangan-2.jpg',
-    deskripsi: 'Lantai Taraflex empuk standar liga internasional dengan traksi maksimal untuk kecepatan dan kelincahan tim.',
   },
   {
     id: 3,
     nama: 'Lapangan 3',
     lokasi: 'Kota Tangerang Selatan',
     rating: 4.98,
-    kategori: 'Polypropylene',
-    hargaCoret: 200000,
-    hargaMulai: 160000,
+    kategori: 'Lantai Vinyl',
+    hargaWeekdays: 150000,
+    hargaWeekend: 180000,
     imageUrl: '/images/lapangan-3.jpg',
-    deskripsi: 'Ubin interlocking polypropylene anti-selip dengan pantulan bola akurat, dilengkapi sirkulasi indoor sejuk & bench representatif.',
   },
 ];
 
@@ -66,11 +62,8 @@ export default function JadwalPage() {
 
       <main className="max-w-7xl mx-auto px-6 py-10 flex-1 space-y-10 w-full">
         
-        {/* Section Marker Label */}
+        {/* Section Label */}
         <div className="flex items-center gap-3">
-          <span className="w-8 h-8 rounded-full bg-brand-navy dark:bg-brand-lime text-brand-lime dark:text-brand-navy flex items-center justify-center font-bebas text-base font-bold shadow-sm">
-            B
-          </span>
           <span className="font-bebas text-xl md:text-2xl tracking-wider text-brand-ink dark:text-white uppercase">
             Kalender Jadwal Lapangan
           </span>
@@ -136,31 +129,23 @@ export default function JadwalPage() {
                     <span>•</span>
                     <span>{lap.lokasi}</span>
                   </div>
-
-                  <p className="font-sora text-xs text-brand-dim dark:text-stone-400 leading-relaxed line-clamp-2">
-                    {lap.deskripsi}
-                  </p>
                 </div>
               </div>
 
               {/* Harga & Tombol Aksi */}
               <div className="p-6 pt-0 border-t border-brand-line dark:border-white/10 mt-2">
-                <div className="pt-4 flex items-center justify-between">
-                  <div>
-                    <span className="line-through text-xs text-brand-dim block font-mono">
-                      {formatRupiah(lap.hargaCoret)}
+                <div className="pt-4 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-dim dark:text-stone-400 font-medium">Senin - Jumat:</span>
+                    <span className="font-bebas text-xl text-brand-navy dark:text-white">
+                      {formatRupiah(lap.hargaWeekdays)} <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span>
                     </span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-xs text-brand-dim">Mulai</span>
-                      <span className="font-bebas text-2xl text-brand-blue dark:text-brand-lime">
-                        {formatRupiah(lap.hargaMulai)}
-                      </span>
-                      <span className="text-xs text-brand-dim">/jam</span>
-                    </div>
                   </div>
-
-                  <div className="w-10 h-10 rounded-xl bg-brand-navy text-brand-lime group-hover:bg-brand-lime group-hover:text-brand-navy flex items-center justify-center transition-all shadow-sm">
-                    <ChevronRight className="w-5 h-5" />
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-dim dark:text-stone-400 font-medium">Sabtu - Minggu:</span>
+                    <span className="font-bebas text-xl text-brand-blue dark:text-brand-lime">
+                      {formatRupiah(lap.hargaWeekend)} <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span>
+                    </span>
                   </div>
                 </div>
               </div>

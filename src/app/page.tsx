@@ -68,11 +68,7 @@ export default function HomePage() {
 
             {/* Top Bar inside Hero: Chip Status */}
             <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
-              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-brand-navy/90 border border-white/20 text-white backdrop-blur-sm text-xs font-semibold">
-                <span className="w-2.5 h-2.5 rounded-full bg-brand-lime animate-ping" />
-                <span className="tracking-wide uppercase font-bebas text-sm text-brand-lime">Arena Siap Pakai 24/7</span>
-                <span className="text-stone-400 font-mono text-[11px] hidden sm:inline">| 3 Lapangan Interlock FIFA</span>
-              </div>
+              <div />
 
               <div className="hidden md:flex items-center gap-2 text-xs font-semibold text-white/90 bg-black/40 px-3 py-1.5 rounded-lg border border-white/10">
                 <MapPin className="w-3.5 h-3.5 text-brand-lime" />
@@ -80,56 +76,29 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Middle: Headline Raksasa "MAIN SERU." */}
+            {/* Middle: Headline Slogan Hero */}
             <div className="relative z-10 my-auto py-8">
               <span className="font-bebas text-brand-lime text-xl md:text-2xl tracking-widest uppercase block mb-1">
-                Arena Futsal Modern & Real-Time Booking
+                Arena Futsal Modern
               </span>
               <h1 className="font-bebas text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white tracking-tight leading-[0.88] uppercase drop-shadow-md">
-                MAIN SERU. <br />
-                <span className="text-brand-lime">TANPA BENTROK.</span>
+                MAIN FUTSAL. <br />
+                <span className="text-brand-lime">LEBIH MUDAH.</span>
               </h1>
-              <p className="font-sora text-stone-200 text-sm sm:text-base md:text-lg max-w-xl mt-4 leading-relaxed font-normal">
-                Platform reservasi 3 lapangan futsal turnamen dengan sistem kunci slot 15 menit otomatis, e-receipt resmi, dan kepastian jadwal tim tanpa chat bolak-balik.
-              </p>
             </div>
 
-            {/* Bottom Row inside Hero: Info Card (Kiri Bawah) & Tombol Booking (Kanan Bawah) */}
-            <div className="relative z-10 flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-6 pt-4 border-t border-white/15">
-              
-              {/* Kartu info kecil kiri bawah */}
-              <div className="p-4 rounded-xl bg-brand-navy/95 border-[1.5px] border-white/20 text-white backdrop-blur-md max-w-md shadow-hard-navy">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-brand-lime text-brand-navy flex items-center justify-center font-bebas text-xl font-bold shrink-0">
-                    3L
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">Status Live Lapangan</span>
-                      <Badge variant="lime" size="sm">Buka Hari Ini</Badge>
-                    </div>
-                    <p className="text-[11px] text-stone-300 mt-0.5">
-                      Sesi Siang (08:00 - 15:00) & Sesi Malam (15:00 - 00:00). Slot ter-update setiap detik.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Tombol Booking Sekarang kanan bawah */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <Link href="/jadwal" className="w-full sm:w-auto">
-                  <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-hard-navy font-bebas text-xl tracking-wider uppercase">
-                    <span>Booking Sekarang</span>
-                    <ArrowRight className="w-5 h-5 ml-1" />
-                  </Button>
-                </Link>
-                <Link href="/fasilitas" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/30 font-bebas text-xl tracking-wider uppercase">
-                    Lihat Tarif
-                  </Button>
-                </Link>
-              </div>
-
+            {/* Bottom Row inside Hero: Tombol Booking (Tanpa Tanda Panah) */}
+            <div className="relative z-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-white/15">
+              <Link href="/jadwal" className="w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-hard-navy font-bebas text-xl tracking-wider uppercase">
+                  <span>Booking Sekarang</span>
+                </Button>
+              </Link>
+              <Link href="/fasilitas" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/30 font-bebas text-xl tracking-wider uppercase">
+                  <span>Lihat Tarif</span>
+                </Button>
+              </Link>
             </div>
 
           </div>
@@ -138,16 +107,13 @@ export default function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION A: TENTANG KAMI & STATISTIK VENUE
+          SECTION: TENTANG KAMI & STATISTIK VENUE
          ========================================================================= */}
       <section className="py-20 border-b-[1.5px] border-brand-line dark:border-white/10">
         <div className="max-w-7xl mx-auto px-6">
           
-          {/* Section Marker Label: A / Tentang */}
+          {/* Section Label: Tentang FutsalHub Arena */}
           <div className="flex items-center gap-3 mb-10">
-            <span className="w-8 h-8 rounded-full bg-brand-navy dark:bg-brand-lime text-brand-lime dark:text-brand-navy flex items-center justify-center font-bebas text-base font-bold shadow-sm">
-              A
-            </span>
             <span className="font-bebas text-xl md:text-2xl tracking-wider text-brand-ink dark:text-white uppercase">
               Tentang FutsalHub Arena
             </span>
@@ -175,7 +141,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <span className="font-bebas text-xl leading-none block text-brand-lime">3 LAPANGAN RESMI</span>
-                      <span className="text-[11px] text-stone-300 font-sora">Interlock Standar Turnamen</span>
+                      <span className="text-[11px] text-stone-300 font-sora">Lantai Vinyl Standar Turnamen</span>
                     </div>
                   </div>
                 </div>
@@ -301,16 +267,13 @@ export default function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION B: PILIHAN LAPANGAN (KARTU LAPANGAN 1-3 BERFOTO)
+          SECTION: PILIHAN LAPANGAN (KARTU LAPANGAN 1-3 BERFOTO)
          ========================================================================= */}
       <section className="py-20 border-b-[1.5px] border-brand-line dark:border-white/10 bg-white dark:bg-brand-ink/80">
         <div className="max-w-7xl mx-auto px-6">
           
-          {/* Section Marker Label: B / Lapangan */}
+          {/* Section Label: Pilihan Lapangan Arena */}
           <div className="flex items-center gap-3 mb-10">
-            <span className="w-8 h-8 rounded-full bg-brand-navy dark:bg-brand-lime text-brand-lime dark:text-brand-navy flex items-center justify-center font-bebas text-base font-bold shadow-sm">
-              B
-            </span>
             <span className="font-bebas text-xl md:text-2xl tracking-wider text-brand-ink dark:text-white uppercase">
               Pilihan Lapangan Arena
             </span>
@@ -323,12 +286,12 @@ export default function HomePage() {
                 3 LAPANGAN TURNAMEN RESMI
               </h2>
               <p className="font-sora text-sm text-brand-dim dark:text-stone-400 mt-2 max-w-lg">
-                Seluruh lapangan dilengkapi lantai interlock standar FIFA, pencahayaan 400 Lux tanpa bayangan, dan jaring pengaman keliling 6 meter.
+                Seluruh lapangan menggunakan lantai vinyl berkualitas standar turnamen, pencahayaan 400 Lux tanpa silau, dan jaring pengaman keliling 6 meter.
               </p>
             </div>
             <Link href="/jadwal">
               <Button variant="outline" className="font-bebas text-lg uppercase tracking-wider">
-                Lihat Semua Kalender Slot <ArrowRight className="w-4 h-4 ml-1" />
+                <span>Lihat Semua Kalender Slot</span>
               </Button>
             </Link>
           </div>
@@ -342,13 +305,13 @@ export default function HomePage() {
                 <div className="relative aspect-[16/10] overflow-hidden bg-brand-navy">
                   <Image
                     src="/images/lapangan-1.jpg"
-                    alt="Lapangan 1 - Vinyl Interlock"
+                    alt="Lapangan 1 - Lantai Vinyl"
                     fill
                     className="object-cover group-hover:scale-103 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3 flex items-center gap-2">
                     <Badge variant="navy">Venue #1</Badge>
-                    <Badge variant="lime">Interlock</Badge>
+                    <Badge variant="lime">Lantai Vinyl</Badge>
                   </div>
                   <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-black/80 text-white text-xs font-bold flex items-center gap-1 backdrop-blur-sm">
                     <Star className="w-3.5 h-3.5 fill-brand-lime text-brand-lime" />
@@ -356,32 +319,22 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-3">
+                <div className="p-6 space-y-4">
                   <h3 className="font-bebas text-2xl text-brand-ink dark:text-white uppercase tracking-tight">
-                    LAPANGAN 1 • VINYL INTERLOCK
+                    LAPANGAN 1 • LANTAI VINYL
                   </h3>
-                  <p className="font-sora text-xs text-brand-dim dark:text-stone-400 leading-relaxed">
-                    Lantai interlock vinyl resmi turnamen dengan daya redam lutut tinggi, ideal untuk kompetisi intensitas tinggi.
-                  </p>
                   
-                  <div className="pt-2 border-t border-brand-line dark:border-white/10 flex items-baseline justify-between">
-                    <div>
-                      <span className="text-xs text-brand-dim line-through block font-mono">Rp 180.000</span>
-                      <span className="font-bebas text-2xl text-brand-blue dark:text-brand-lime">
-                        Mulai Rp 150.000 <span className="font-sora text-xs text-brand-dim dark:text-stone-400 font-normal">/ jam</span>
-                      </span>
+                  <div className="pt-2 border-t border-brand-line dark:border-white/10 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-brand-dim dark:text-stone-400 font-medium">Senin - Jumat (Weekdays):</span>
+                      <span className="font-bebas text-xl text-brand-navy dark:text-white">Rp 150.000 <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span></span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-brand-dim dark:text-stone-400 font-medium">Sabtu - Minggu (Weekend):</span>
+                      <span className="font-bebas text-xl text-brand-blue dark:text-brand-lime">Rp 180.000 <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span></span>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="p-6 pt-0">
-                <Link href="/jadwal/1">
-                  <Button variant="dark" className="w-full justify-between font-bebas text-lg tracking-wider uppercase">
-                    <span>Pilih Jam Lapangan 1</span>
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </Link>
               </div>
             </div>
 
@@ -391,13 +344,13 @@ export default function HomePage() {
                 <div className="relative aspect-[16/10] overflow-hidden bg-brand-navy">
                   <Image
                     src="/images/lapangan-2.jpg"
-                    alt="Lapangan 2 - Taraflex Pro"
+                    alt="Lapangan 2 - Lantai Vinyl"
                     fill
                     className="object-cover group-hover:scale-103 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3 flex items-center gap-2">
                     <Badge variant="navy">Venue #2</Badge>
-                    <Badge variant="blue">Taraflex Pro</Badge>
+                    <Badge variant="blue">Lantai Vinyl</Badge>
                   </div>
                   <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-black/80 text-white text-xs font-bold flex items-center gap-1 backdrop-blur-sm">
                     <Star className="w-3.5 h-3.5 fill-brand-lime text-brand-lime" />
@@ -405,32 +358,22 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-3">
+                <div className="p-6 space-y-4">
                   <h3 className="font-bebas text-2xl text-brand-ink dark:text-white uppercase tracking-tight">
-                    LAPANGAN 2 • TARAFLEX PRO
+                    LAPANGAN 2 • LANTAI VINYL
                   </h3>
-                  <p className="font-sora text-xs text-brand-dim dark:text-stone-400 leading-relaxed">
-                    Permukaan Taraflex empuk standar liga internasional dengan traksi optimal untuk kecepatan dan kelincahan tim.
-                  </p>
                   
-                  <div className="pt-2 border-t border-brand-line dark:border-white/10 flex items-baseline justify-between">
-                    <div>
-                      <span className="text-xs text-brand-dim line-through block font-mono">Rp 175.000</span>
-                      <span className="font-bebas text-2xl text-brand-blue dark:text-brand-lime">
-                        Mulai Rp 140.000 <span className="font-sora text-xs text-brand-dim dark:text-stone-400 font-normal">/ jam</span>
-                      </span>
+                  <div className="pt-2 border-t border-brand-line dark:border-white/10 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-brand-dim dark:text-stone-400 font-medium">Senin - Jumat (Weekdays):</span>
+                      <span className="font-bebas text-xl text-brand-navy dark:text-white">Rp 150.000 <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span></span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-brand-dim dark:text-stone-400 font-medium">Sabtu - Minggu (Weekend):</span>
+                      <span className="font-bebas text-xl text-brand-blue dark:text-brand-lime">Rp 180.000 <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span></span>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="p-6 pt-0">
-                <Link href="/jadwal/2">
-                  <Button variant="dark" className="w-full justify-between font-bebas text-lg tracking-wider uppercase">
-                    <span>Pilih Jam Lapangan 2</span>
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </Link>
               </div>
             </div>
 
@@ -440,13 +383,13 @@ export default function HomePage() {
                 <div className="relative aspect-[16/10] overflow-hidden bg-brand-navy">
                   <Image
                     src="/images/lapangan-3.jpg"
-                    alt="Lapangan 3 - Premium Polypropylene"
+                    alt="Lapangan 3 - Lantai Vinyl"
                     fill
                     className="object-cover group-hover:scale-103 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3 flex items-center gap-2">
                     <Badge variant="navy">Venue #3</Badge>
-                    <Badge variant="lime">Polypropylene</Badge>
+                    <Badge variant="lime">Lantai Vinyl</Badge>
                   </div>
                   <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-black/80 text-white text-xs font-bold flex items-center gap-1 backdrop-blur-sm">
                     <Star className="w-3.5 h-3.5 fill-brand-lime text-brand-lime" />
@@ -454,32 +397,22 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-3">
+                <div className="p-6 space-y-4">
                   <h3 className="font-bebas text-2xl text-brand-ink dark:text-white uppercase tracking-tight">
-                    LAPANGAN 3 • PREMIUM INTERLOCK
+                    LAPANGAN 3 • LANTAI VINYL
                   </h3>
-                  <p className="font-sora text-xs text-brand-dim dark:text-stone-400 leading-relaxed">
-                    Ubin polypropylene interlocking anti-selip dengan pantulan bola sempurna, sangat cocok untuk sparring dan turnamen.
-                  </p>
                   
-                  <div className="pt-2 border-t border-brand-line dark:border-white/10 flex items-baseline justify-between">
-                    <div>
-                      <span className="text-xs text-brand-dim line-through block font-mono">Rp 190.000</span>
-                      <span className="font-bebas text-2xl text-brand-blue dark:text-brand-lime">
-                        Mulai Rp 160.000 <span className="font-sora text-xs text-brand-dim dark:text-stone-400 font-normal">/ jam</span>
-                      </span>
+                  <div className="pt-2 border-t border-brand-line dark:border-white/10 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-brand-dim dark:text-stone-400 font-medium">Senin - Jumat (Weekdays):</span>
+                      <span className="font-bebas text-xl text-brand-navy dark:text-white">Rp 150.000 <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span></span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-brand-dim dark:text-stone-400 font-medium">Sabtu - Minggu (Weekend):</span>
+                      <span className="font-bebas text-xl text-brand-blue dark:text-brand-lime">Rp 180.000 <span className="font-sora text-[11px] font-normal text-brand-dim">/ jam</span></span>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="p-6 pt-0">
-                <Link href="/jadwal/3">
-                  <Button variant="dark" className="w-full justify-between font-bebas text-lg tracking-wider uppercase">
-                    <span>Pilih Jam Lapangan 3</span>
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </Link>
               </div>
             </div>
 
@@ -498,7 +431,7 @@ export default function HomePage() {
             <div className="space-y-1 border-l-2 border-brand-lime pl-4">
               <span className="font-bebas text-4xl sm:text-5xl text-brand-lime block leading-none">3 LAPANGAN</span>
               <p className="font-sora text-xs text-stone-300">
-                Interlock Standar Resmi Turnamen
+                Lantai Vinyl Standar Turnamen
               </p>
             </div>
 
@@ -547,12 +480,11 @@ export default function HomePage() {
               <Link href="/jadwal" className="w-full sm:w-auto">
                 <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-hard-navy font-bebas text-xl tracking-wider uppercase">
                   <span>Pilih Jam Sekarang</span>
-                  <ArrowRight className="w-5 h-5 ml-1" />
                 </Button>
               </Link>
               <Link href="/fasilitas" className="w-full sm:w-auto">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white/10 text-white border-white/20 hover:bg-white/20 font-bebas text-xl tracking-wider uppercase">
-                  Lihat Fasilitas
+                  <span>Lihat Fasilitas</span>
                 </Button>
               </Link>
             </div>

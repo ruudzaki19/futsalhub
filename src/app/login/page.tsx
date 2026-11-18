@@ -5,12 +5,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, X, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FutsalEmblem from '../components/FutsalEmblem';
-import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import { 
   getRegisteredUsers, 
@@ -25,9 +24,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<{ title: string; desc: string; notRegistered?: boolean } | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [showNotRegisteredModal, setShowNotRegisteredModal] = useState(false);
 
   // Handler Submit Login dengan Validasi
   const handleLogin = (e: React.FormEvent) => {
@@ -40,13 +39,16 @@ export default function LoginPage() {
       const cleanEmail = email.trim().toLowerCase();
       const cleanPass = password.trim();
 
-      setErrorMsg(null);
+      setEmailError(null);
+      setPasswordError(null);
 
-      if (!cleanEmail || !cleanPass) {
-        setErrorMsg({
-          title: 'Email & Kata Sandi Wajib Diisi',
-          desc: 'Silakan masukkan alamat email dan kata sandi akun Anda.',
-        });
+      if (!cleanEmail) {
+        setEmailError('Alamat email wajib diisi.');
+        return;
+      }
+
+      if (!cleanPass) {
+        setPasswordError('Kata sandi wajib diisi.');
         return;
       }
 
@@ -58,23 +60,15 @@ export default function LoginPage() {
         (u) => u.email.toLowerCase() === cleanEmail
       );
 
-      // KASUS 1: Email belum pernah didaftarkan
+      // KASUS 1: Email belum pernah didaftarkan (notifikasi langsung di bawah email)
       if (!matchedUser) {
-        setErrorMsg({
-          title: 'Akun Belum Terdaftar!',
-          desc: `Email "${cleanEmail}" belum terdaftar di sistem FutsalHub. Silakan periksa kembali email Anda atau klik tombol di bawah untuk mendaftar akun baru.`,
-          notRegistered: true,
-        });
-        setShowNotRegisteredModal(true);
+        setEmailError('Akun belum terdaftar');
         return;
       }
 
-      // KASUS 2: Password salah
+      // KASUS 2: Password salah (notifikasi langsung di bawah password)
       if (matchedUser.passwordHash !== cleanPass) {
-        setErrorMsg({
-          title: 'Kata Sandi Salah',
-          desc: 'Kata sandi yang Anda masukkan tidak sesuai. Silakan periksa kembali kata sandi akun Anda.',
-        });
+        setPasswordError('Kata sandi salah');
         return;
       }
 
@@ -99,7 +93,7 @@ export default function LoginPage() {
       } else {
         router.push('/jadwal');
       }
-    }, 600);
+    }, 500);
   };
 
   return (
@@ -107,11 +101,11 @@ export default function LoginPage() {
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-6 py-10 w-full flex items-center justify-center">
-        {/* Dua Kolom: Kiri Foto Real + Teks Condensed Besar, Kanan Form Bersih */}
+        {/* Dua Kolom: Kiri Foto Real + Teks Slogan Mengajak, Kanan Form Bersih */}
         <div className="w-full grid lg:grid-cols-12 rounded-3xl overflow-hidden border-[1.5px] border-brand-line dark:border-white/10 shadow-hard-navy-lg bg-white dark:bg-brand-navy/30">
           
-          {/* Kolom Kiri: Foto Futsal Real + Teks Condensed Besar */}
-          <div className="lg:col-span-6 relative hidden lg:flex flex-col justify-between p-10 bg-brand-navy text-white overflow-hidden min-h-[600px]">
+          {/* Kolom Kiri: Foto Futsal Real + Teks Slogan Mengajak */}
+          <div className="lg:col-span-6 relative hidden lg:flex flex-col justify-between p-10 bg-brand-navy text-white overflow-hidden min-h-[560px]">
             <div className="absolute inset-0 -z-0">
               <Image
                 src="/images/login-futsal.jpg"
@@ -129,25 +123,16 @@ export default function LoginPage() {
                 <FutsalEmblem className="w-8 h-8" />
                 <span className="font-bebas text-2xl tracking-wider text-white">FUTSALHUB</span>
               </div>
-              <Badge variant="lime">Portal Masuk</Badge>
             </div>
 
-            <div className="relative z-10 space-y-4 my-auto">
-              <span className="font-bebas text-brand-lime text-xl tracking-wider uppercase block">
-                Sistem Reservasi 24/7
-              </span>
-              <h2 className="font-bebas text-6xl text-white uppercase tracking-tight leading-[0.92]">
-                SIAP TANDING. <br />
-                KUNCI SLOT TIM ANDA.
+            <div className="relative z-10 space-y-3 my-auto">
+              <h2 className="font-bebas text-5xl sm:text-6xl text-white uppercase tracking-tight leading-[0.92]">
+                GABUNG SEKARANG. <br />
+                <span className="text-brand-lime">AMBIL JADWAL MAIN TIM KAMU.</span>
               </h2>
               <p className="font-sora text-sm text-stone-200 max-w-md leading-relaxed">
-                Akses akun kapten tim atau staf operasional arena untuk reservasi slot lapangan, cek bukti e-receipt, dan pantau status jadwal secara live.
+                Pesan lapangan futsal favoritmu dengan mudah dan cepat kapan saja.
               </p>
-            </div>
-
-            <div className="relative z-10 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-stone-300">
-              <span>3 Lapangan Interlock FIFA</span>
-              <span className="font-mono text-brand-lime">Auto-Lock 15 Menit Aktif</span>
             </div>
           </div>
 
@@ -166,41 +151,6 @@ export default function LoginPage() {
                   Masukkan email dan kata sandi akun FutsalHub Anda.
                 </p>
               </div>
-
-              {/* Pemberitahuan Error / Akun Belum Terdaftar */}
-              {errorMsg && (
-                <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border-[1.5px] border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200 text-xs flex items-start gap-3 shadow-xs">
-                  <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-                  <div className="space-y-1.5 flex-1 text-left">
-                    <div className="flex items-center justify-between">
-                      <strong className="block font-bold text-rose-900 dark:text-rose-200 text-sm">
-                        {errorMsg.title}
-                      </strong>
-                      <button
-                        type="button"
-                        onClick={() => setErrorMsg(null)}
-                        className="text-rose-400 hover:text-rose-700 transition-colors cursor-pointer p-0.5"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <p className="text-stone-700 dark:text-stone-300 leading-relaxed text-xs">
-                      {errorMsg.desc}
-                    </p>
-                    {errorMsg.notRegistered && (
-                      <div className="pt-2">
-                        <Link
-                          href="/register"
-                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs transition-all cursor-pointer font-bebas tracking-wider uppercase"
-                        >
-                          <span>Daftar / Registrasi Akun Baru</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
 
               {/* Pemberitahuan Sukses */}
               {successMsg && (
@@ -222,21 +172,20 @@ export default function LoginPage() {
                       value={email}
                       onChange={(e) => { 
                         setEmail(e.target.value); 
-                        if (errorMsg) setErrorMsg(null); 
+                        if (emailError) setEmailError(null); 
                       }}
                       placeholder="nama@email.com"
                       required
                       className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm text-brand-ink dark:text-white bg-white dark:bg-brand-navy/50 border-[1.5px] focus:outline-none transition-all ${
-                        errorMsg?.notRegistered 
+                        emailError 
                           ? 'border-rose-500 ring-2 ring-rose-500/20' 
                           : 'border-brand-line dark:border-white/10 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20'
                       }`}
                     />
                   </div>
-                  {errorMsg?.notRegistered && (
-                    <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1.5 pt-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span>Akun belum terdaftar! Silakan registrasi terlebih dahulu.</span>
+                  {emailError && (
+                    <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 pt-1">
+                      {emailError}
                     </p>
                   )}
                 </div>
@@ -252,12 +201,12 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => { 
                         setPassword(e.target.value); 
-                        if (errorMsg) setErrorMsg(null); 
+                        if (passwordError) setPasswordError(null); 
                       }}
                       placeholder="Masukkan sandi akun"
                       required
                       className={`w-full pl-10 pr-11 py-3 rounded-xl text-sm text-brand-ink dark:text-white bg-white dark:bg-brand-navy/50 border-[1.5px] focus:outline-none transition-all ${
-                        errorMsg?.title === 'Kata Sandi Salah' 
+                        passwordError 
                           ? 'border-rose-500 ring-2 ring-rose-500/20' 
                           : 'border-brand-line dark:border-white/10 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20'
                       }`}
@@ -271,10 +220,9 @@ export default function LoginPage() {
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
-                  {errorMsg?.title === 'Kata Sandi Salah' && (
-                    <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1.5 pt-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span>Kata sandi salah! Silakan periksa kembali kata sandi akun Anda.</span>
+                  {passwordError && (
+                    <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 pt-1">
+                      {passwordError}
                     </p>
                   )}
                 </div>
@@ -289,10 +237,7 @@ export default function LoginPage() {
                   {isLoading ? (
                     <span className="w-5 h-5 border-2 border-brand-navy/30 border-t-brand-navy rounded-full animate-spin" />
                   ) : (
-                    <>
-                      <span>Masuk ke Akun</span>
-                      <ArrowRight className="w-5 h-5 ml-1" />
-                    </>
+                    <span>Masuk ke Akun</span>
                   )}
                 </Button>
               </form>
@@ -313,48 +258,6 @@ export default function LoginPage() {
 
         </div>
       </main>
-
-      {/* POP-UP MODAL PEMBERITAHUAN AKUN BELUM TERDAFTAR */}
-      {showNotRegisteredModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/70 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-brand-navy rounded-2xl p-6 sm:p-8 max-w-sm w-full text-center space-y-5 shadow-hard-navy-lg border-[1.5px] border-brand-line dark:border-white/10">
-            <div className="w-14 h-14 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto">
-              <AlertCircle className="w-7 h-7" />
-            </div>
-
-            <div className="space-y-1.5">
-              <h3 className="font-bebas text-2xl text-brand-ink dark:text-white uppercase tracking-tight">
-                Akun Belum Terdaftar!
-              </h3>
-              <p className="text-xs text-brand-dim dark:text-stone-300 leading-relaxed">
-                Email <strong className="text-brand-ink dark:text-white font-bold font-mono">"{email}"</strong> belum terdaftar di sistem FutsalHub.
-              </p>
-              <p className="text-xs text-rose-700 dark:text-rose-300 font-bold bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl p-2.5 mt-2">
-                Silakan registrasi akun tim baru terlebih dahulu sebelum login.
-              </p>
-            </div>
-
-            <div className="pt-2 space-y-2">
-              <Link
-                href="/register"
-                className="w-full inline-block"
-              >
-                <Button variant="primary" className="w-full font-bebas text-lg tracking-wider uppercase shadow-hard-navy">
-                  <span>Daftar Sekarang</span>
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </Link>
-              <button
-                type="button"
-                onClick={() => setShowNotRegisteredModal(false)}
-                className="w-full py-2 text-xs font-semibold text-brand-dim dark:text-stone-400 hover:text-brand-ink dark:hover:text-white cursor-pointer"
-              >
-                Coba Email Lain
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>

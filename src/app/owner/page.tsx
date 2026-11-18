@@ -161,31 +161,18 @@ export default function OwnerPanelPage() {
             </Link>
 
             <Link
-              href="/admin"
+              href="/"
+              target="_blank"
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-stone-300 hover:text-white hover:bg-white/5 transition-colors"
             >
-              <LayoutDashboard className="w-5 h-5" />
-              <span>Desk Kasir Operasional</span>
-            </Link>
-
-            <Link
-              href="/jadwal"
-              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-stone-300 hover:text-white hover:bg-white/5 transition-colors"
-            >
-              <Calendar className="w-5 h-5" />
-              <span>Kalender Jadwal</span>
+              <ExternalLink className="w-5 h-5 text-brand-lime" />
+              <span>Lihat Web Publik</span>
             </Link>
           </nav>
         </div>
 
         {/* Footer Sidebar */}
         <div className="p-4 border-t border-white/10 space-y-3 font-sora">
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-            <span className="text-[10px] text-stone-400 block uppercase font-bold tracking-wider">Pemilik Arena</span>
-            <span className="font-bold text-xs text-white block truncate">{currentUser.nama}</span>
-            <span className="text-[11px] text-brand-lime font-mono block truncate">{currentUser.email}</span>
-          </div>
-
           <button
             type="button"
             onClick={handleLogout}
@@ -221,25 +208,7 @@ export default function OwnerPanelPage() {
               <h1 className="font-bebas text-2xl text-brand-ink dark:text-white uppercase leading-none tracking-tight">
                 PORTAL EKSEKUTIF PEMILIK (OWNER)
               </h1>
-              <span className="text-xs text-brand-dim dark:text-stone-400 hidden sm:inline">
-                Ringkasan Arus Kas, Okupansi 3 Lapangan, & Kontrol Tarif
-              </span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              target="_blank"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-bg dark:bg-brand-navy/60 hover:bg-brand-line/50 text-brand-ink dark:text-stone-200 text-xs font-semibold border border-brand-line dark:border-white/10 transition-all"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Web Publik</span>
-            </Link>
-
-            <Badge variant="lime">
-              <span>Owner Access</span>
-            </Badge>
           </div>
         </header>
 
@@ -252,9 +221,6 @@ export default function OwnerPanelPage() {
               <h2 className="font-bebas text-3xl text-brand-ink dark:text-white uppercase leading-none">
                 RINGKASAN KINERJA BISNIS & FINANSIAL
               </h2>
-              <p className="font-sora text-xs text-brand-dim dark:text-stone-400 mt-1">
-                Pantau realisasi transaksi, piutang kasir, dan ekspor pembukuan format CSV.
-              </p>
             </div>
 
             <div className="flex items-center gap-3">

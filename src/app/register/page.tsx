@@ -105,25 +105,16 @@ export default function RegisterPage() {
                 <FutsalEmblem className="w-8 h-8" />
                 <span className="font-bebas text-2xl tracking-wider text-white">FUTSALHUB</span>
               </div>
-              <Badge variant="lime">Registrasi Akun</Badge>
             </div>
 
-            <div className="relative z-10 space-y-4 my-auto">
-              <span className="font-bebas text-brand-lime text-xl tracking-wider uppercase block">
-                Gabung Komunitas Arena
-              </span>
+            <div className="relative z-10 space-y-3 my-auto">
               <h2 className="font-bebas text-5xl md:text-6xl text-white uppercase tracking-tight leading-[0.92]">
-                DAFTARKAN TIM. <br />
-                KUNCI JADWAL.
+                GABUNG SEKARANG. <br />
+                <span className="text-brand-lime">AMBIL JADWAL MAIN TIM KAMU.</span>
               </h2>
               <p className="font-sora text-sm text-stone-200 max-w-sm leading-relaxed">
-                Buat akun kapten tim sekarang untuk akses booking 3 lapangan standar FIFA, e-receipt otomatis, dan histori pertandingan.
+                Pesan lapangan futsal favoritmu dengan mudah dan cepat kapan saja.
               </p>
-            </div>
-
-            <div className="relative z-10 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-stone-300">
-              <span>3 Lapangan Turnamen</span>
-              <span className="font-mono text-brand-lime">Auto-Lock Aktif</span>
             </div>
           </div>
 
@@ -170,7 +161,6 @@ export default function RegisterPage() {
                           className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-navy hover:bg-brand-ink text-white font-bold text-xs shadow-xs transition-all cursor-pointer font-bebas tracking-wider uppercase"
                         >
                           <span>Langsung Masuk ke Akun Anda</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     )}
@@ -285,10 +275,7 @@ export default function RegisterPage() {
                   {isLoading ? (
                     <span className="w-5 h-5 border-2 border-brand-navy/30 border-t-brand-navy rounded-full animate-spin" />
                   ) : (
-                    <>
-                      <span>Daftar Akun Sekarang</span>
-                      <ArrowRight className="w-5 h-5 ml-1" />
-                    </>
+                    <span>Daftar Akun Sekarang</span>
                   )}
                 </Button>
               </form>

@@ -304,35 +304,22 @@ export default function AdminPanelPage() {
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brand-lime text-brand-navy font-bold shadow-hard-lime"
             >
               <LayoutDashboard className="w-5 h-5" />
-              <span>Desk Kasir & Antrean</span>
+              <span>Desk Kasir</span>
             </Link>
 
             <Link
-              href="/owner"
+              href="/"
+              target="_blank"
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-stone-300 hover:text-white hover:bg-white/5 transition-colors"
             >
-              <TrendingUp className="w-5 h-5 text-brand-lime" />
-              <span>Portal Owner</span>
-            </Link>
-
-            <Link
-              href="/jadwal"
-              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-stone-300 hover:text-white hover:bg-white/5 transition-colors"
-            >
-              <Calendar className="w-5 h-5" />
-              <span>Kalender Jadwal</span>
+              <ExternalLink className="w-5 h-5 text-brand-lime" />
+              <span>Lihat Web Publik</span>
             </Link>
           </nav>
         </div>
 
-        {/* Footer Sidebar: Operator Info */}
+        {/* Footer Sidebar: Tombol Keluar Akun */}
         <div className="p-4 border-t border-white/10 space-y-3 font-sora">
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-            <span className="text-[10px] text-stone-400 block uppercase font-bold tracking-wider">Operator Kasir</span>
-            <span className="font-bold text-xs text-white block truncate">{currentUser.nama}</span>
-            <span className="text-[11px] text-brand-lime font-mono block truncate">{currentUser.email}</span>
-          </div>
-
           <button
             type="button"
             onClick={handleLogout}
@@ -366,28 +353,9 @@ export default function AdminPanelPage() {
             </button>
             <div>
               <h1 className="font-bebas text-2xl text-brand-ink dark:text-white uppercase leading-none tracking-tight">
-                DESK KASIR & OPERASIONAL
+                DESK KASIR
               </h1>
-              <span className="text-xs text-brand-dim dark:text-stone-400 hidden sm:inline">
-                Sistem Verifikasi Antrean Reservasi 3 Lapangan
-              </span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              target="_blank"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-bg dark:bg-brand-navy/60 hover:bg-brand-line/50 text-brand-ink dark:text-stone-200 text-xs font-semibold border border-brand-line dark:border-white/10 transition-all"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Lihat Web Publik</span>
-            </Link>
-
-            <Badge variant="lime">
-              <span className="w-2 h-2 rounded-full bg-brand-navy dark:bg-brand-ink animate-ping" />
-              <span>Sistem Kasir Aktif</span>
-            </Badge>
           </div>
         </header>
 
@@ -452,13 +420,10 @@ export default function AdminPanelPage() {
           <div className="bg-white dark:bg-brand-navy/30 rounded-2xl border-[1.5px] border-brand-line dark:border-white/10 p-6 space-y-6 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-line dark:border-white/10">
               <div>
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2">
                   <Badge variant="blue">Visual 16 Jam Slot</Badge>
                   <span className="font-bebas text-lg text-brand-ink dark:text-white uppercase">Monitoring 3 Lapangan</span>
                 </div>
-                <p className="font-sora text-xs text-brand-dim dark:text-stone-400">
-                  Pantau slot kosong, sedang dipesan 10 menit, atau terisi tim. Klik slot untuk rincian cepat.
-                </p>
               </div>
 
               {/* Pemilih Tanggal */}
@@ -493,9 +458,9 @@ export default function AdminPanelPage() {
             {/* Grid 3 Lapangan */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
-                { id: 1, nama: 'Lapangan 1', spek: 'Vinyl Interlock FIFA', statusDict: court1Status },
-                { id: 2, nama: 'Lapangan 2', spek: 'Taraflex Pro Standard', statusDict: court2Status },
-                { id: 3, nama: 'Lapangan 3', spek: 'Polypropylene Interlock', statusDict: court3Status },
+                { id: 1, nama: 'Lapangan 1', spek: 'Lantai Vinyl', statusDict: court1Status },
+                { id: 2, nama: 'Lapangan 2', spek: 'Lantai Vinyl', statusDict: court2Status },
+                { id: 3, nama: 'Lapangan 3', spek: 'Lantai Vinyl', statusDict: court3Status },
               ].map((court) => (
                 <div key={court.id} className="rounded-xl border-[1.5px] border-brand-line dark:border-white/10 bg-brand-bg dark:bg-brand-navy/50 p-4 space-y-3">
                   <div className="border-b border-brand-line dark:border-white/10 pb-2.5 flex items-center justify-between">
