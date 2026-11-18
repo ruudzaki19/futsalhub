@@ -16,8 +16,18 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "FUTSALHUB - Integrated Arena Booking System",
-  description: "Platform Reservasi Lapangan Futsal Real-Time Modern",
+  title: "FUTSALHUB - Sistem Reservasi Lapangan Futsal",
+  description: "Platform Reservasi 3 Lapangan Futsal Standar Turnamen",
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png' },
+    ],
+  },
 };
 
 export default function RootLayout({
